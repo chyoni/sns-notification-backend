@@ -1,4 +1,4 @@
-package cwchoiit.notification.consumer.adpater.out;
+package cwchoiit.notification.consumer.adapter.out;
 
 import cwchoiit.notification.consumer.application.model.Post;
 import cwchoiit.notification.consumer.application.port.out.PostClientPort;

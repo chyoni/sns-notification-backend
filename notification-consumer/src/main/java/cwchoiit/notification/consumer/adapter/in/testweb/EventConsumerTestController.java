@@ -1,6 +1,6 @@
-package cwchoiit.notification.consumer.adpater.in.testweb;
+package cwchoiit.notification.consumer.adapter.in.testweb;
 
-import cwchoiit.notification.consumer.adpater.in.event.comment.CommentEvent;
+import cwchoiit.notification.consumer.adapter.in.event.comment.CommentEvent;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

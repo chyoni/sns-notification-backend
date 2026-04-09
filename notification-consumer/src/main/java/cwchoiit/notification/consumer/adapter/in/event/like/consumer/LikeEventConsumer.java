@@ -1,6 +1,6 @@
-package cwchoiit.notification.consumer.adpater.in.event.like.consumer;
+package cwchoiit.notification.consumer.adapter.in.event.like.consumer;
 
-import cwchoiit.notification.consumer.adpater.in.event.like.LikeEvent;
+import cwchoiit.notification.consumer.adapter.in.event.like.LikeEvent;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

@@ -1,7 +1,7 @@
-package cwchoiit.notification.consumer.adpater.in.event.comment.consumer;
+package cwchoiit.notification.consumer.adapter.in.event.comment.consumer;
 
-import cwchoiit.notification.consumer.adpater.in.event.comment.CommentEvent;
-import cwchoiit.notification.consumer.adpater.in.event.comment.CommentEventType;
+import cwchoiit.notification.consumer.adapter.in.event.comment.CommentEvent;
+import cwchoiit.notification.consumer.adapter.in.event.comment.CommentEventType;
 import cwchoiit.notification.consumer.application.port.in.CommentEventUseCase;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;

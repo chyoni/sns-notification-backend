@@ -1,4 +1,4 @@
-package cwchoiit.notification.consumer.adpater.in.event.follow;
+package cwchoiit.notification.consumer.adapter.in.event.follow;
 
 import java.time.LocalDateTime;
 

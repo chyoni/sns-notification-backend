@@ -1,6 +1,6 @@
-package cwchoiit.notification.consumer.adpater.in.event.follow.consumer;
+package cwchoiit.notification.consumer.adapter.in.event.follow.consumer;
 
-import cwchoiit.notification.consumer.adpater.in.event.follow.FollowEvent;
+import cwchoiit.notification.consumer.adapter.in.event.follow.FollowEvent;
 import java.util.function.Consumer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
