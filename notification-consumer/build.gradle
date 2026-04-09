@@ -1,0 +1,8 @@
+version = "1.0.0"
+description = "Notification Consumer"
+
+dependencies {
+    implementation(project(":notification-core"))
+    implementation(libs.spring.stream.kafka)
+    implementation(libs.springdoc)
+}

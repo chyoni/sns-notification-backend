@@ -1,0 +1,11 @@
+server:
+  port: 8081
+
+notification:
+  mongo:
+    uri: ${NOTIFICATION_MONGO_URI}
+
+spring:
+  config:
+    activate:
+      on-profile: local

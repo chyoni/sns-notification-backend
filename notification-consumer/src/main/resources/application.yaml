@@ -1,0 +1,39 @@
+server:
+  port: 8082
+
+notification:
+  mongo:
+    uri: ${NOTIFICATION_MONGO_URI}
+
+spring:
+  config:
+    activate:
+      on-profile: local
+  application:
+    name: notification-consumer
+  cloud:
+    function:
+      definition: comment; like; follow; # Consume 할 Function 이름
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+      bindings:
+        comment-in-0: # 위에서 선언한 Function 이름과 앞부분(comment-xxx-x)이 동일해야 한다
+          destination: comment # 카프카 토픽 이름
+          content-type: application/json
+          group: notification-consumer
+          consumer:
+            max-attempts: 2
+        like-in-0:
+          destination: like
+          content-type: application/json
+          group: notification-consumer
+          consumer:
+            max-attempts: 2
+        follow-in-0:
+          destination: follow
+          content-type: application/json
+          group: notification-consumer
+          consumer:
+            max-attempts: 2

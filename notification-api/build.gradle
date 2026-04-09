@@ -1,0 +1,6 @@
+version = "1.0.0"
+description = "Notification API"
+
+dependencies {
+    implementation(project(":notification-core"))
+}

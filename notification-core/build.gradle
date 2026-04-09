@@ -1,0 +1,14 @@
+version = "1.0.0"
+description = "Notification Core"
+
+dependencies {
+    implementation(libs.spring.boot.data.mongodb)
+
+    testRuntimeOnly(libs.junit.platform.launcher)
+
+    testImplementation(platform(libs.testcontainers.bom))
+    testImplementation(libs.testcontainers.mongodb)
+    testImplementation(libs.testcontainers.junit)
+
+    testImplementation(libs.spring.boot.testcontainers)
+}

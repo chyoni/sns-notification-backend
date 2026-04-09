@@ -1,0 +1,7 @@
+exclude **/*Application*
+exclude **/*Exception*
+exclude **/*Controller*
+exclude **/model/**
+exclude **/config/**
+exclude **/Q*.class
+exclude **/*$Enum.class

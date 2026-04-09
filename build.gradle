@@ -1,0 +1,164 @@
+plugins {
+    id 'java'
+    id 'jacoco'
+    id 'jacoco-report-aggregation'
+    alias(libs.plugins.spring.boot) apply(false)
+    alias(libs.plugins.spring.dependency)
+    alias(libs.plugins.spotless)
+}
+
+def excludeFromCoverage = new ArrayList<String>()
+file('test-coverage-exclude.asap').withInputStream() {
+    excludeFromCoverage.addAll(new BufferedReader(new InputStreamReader(it))
+            .lines()
+            .parallel()
+            .map(s -> s.substring(7).strip())
+            .toList())
+}
+
+allprojects {
+    group = "cwchoiit.notification"
+    version = "1.0.0"
+    description = "Notification Server"
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: "jacoco"
+    apply plugin: "java-library"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "com.diffplug.spotless"
+
+    if (project.name != "notification-core") {
+        apply plugin: "org.springframework.boot"
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    compileJava.options.encoding = "UTF-8"
+
+    tasks.withType(JavaCompile).configureEach {
+        options.compilerArgs << '-parameters'
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+
+        querydsl.extendsFrom compileClassPath
+
+        configureEach {
+            exclude group: 'commons-logging', module: 'commons-logging'
+        }
+    }
+
+    // Global Dependency
+    dependencies {
+        // Spring Boot Web
+        if (project.name != "notification-core") {
+            implementation(libs.spring.boot.starter.web)
+        }
+
+        // Lombok
+        compileOnly(libs.lombok)
+        annotationProcessor(libs.lombok)
+
+        // Testing Tool
+        testImplementation(libs.junit.jupiter)
+        testImplementation(libs.spring.boot.starter.test)
+        testImplementation(libs.lombok)
+        testAnnotationProcessor(libs.lombok)
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom(libs.spring.cloud.dependencies.get().toString())
+        }
+    }
+
+    // Spotless lint automatically applied in compile time (Intellij)
+    if (System.getProperty("idea.active") == "true") {
+        processResources {
+            dependsOn("spotlessApply")
+        }
+    }
+
+    spotless {
+        java {
+            target("**/*.java")
+            targetExclude("**/generated/**/*.java")
+            googleJavaFormat().aosp()
+            importOrder()
+            endWithNewline()
+            removeUnusedImports()
+            trimTrailingWhitespace()
+        }
+    }
+
+    // test configuration
+    jacoco {
+        toolVersion = '0.8.12'
+    }
+
+    test {
+        testLogging {
+            showExceptions = true
+            showStackTraces = true
+            showStandardStreams = true
+        }
+        excludes
+        useJUnitPlatform()
+        finalizedBy('jacocoTestReport')
+    }
+
+    jacocoTestReport {
+        dependsOn(tasks.test)
+        reports {
+            html.required = true
+            xml.required = true
+            csv.required = false
+        }
+        finalizedBy 'jacocoTestCoverageVerification'
+        afterEvaluate {
+            classDirectories.setFrom(
+                    files(classDirectories.files.each {
+                        fileTree(dir: it, excludes: excludeFromCoverage.stream()
+                                .map(s -> s + ".class")
+                                .toList())
+                    })
+            )
+        }
+    }
+
+    jacocoTestCoverageVerification {
+        violationRules {
+            rule {
+                enabled = true
+                element = 'CLASS'
+                excludes += excludeFromCoverage.stream()
+                        .map(s -> s.replace("/", "."))
+                        .toList()
+
+                limit {
+                    counter = 'LINE'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.00
+                }
+
+                limit {
+                    counter = 'BRANCH'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.00
+                }
+            }
+        }
+    }
+}
