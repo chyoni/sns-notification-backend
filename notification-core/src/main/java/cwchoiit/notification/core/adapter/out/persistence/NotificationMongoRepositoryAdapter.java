@@ -43,6 +43,11 @@ public class NotificationMongoRepositoryAdapter implements NotificationRepositor
         return mongoRepository.findByCommentId(commentId).map(this::toDomain);
     }
 
+    @Override
+    public Optional<Notification> findLikeByPostIdAndLikedBy(Long postId, Long likedBy) {
+        return mongoRepository.findLikeByPostIdAndLikedBy(postId, likedBy).map(this::toDomain);
+    }
+
     private Notification toDomain(NotificationMongoEntity entity) {
         if (entity.getNotificationType() == NotificationType.COMMENT
                 && entity instanceof CommentNotificationMongoEntity commentEntity) {

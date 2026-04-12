@@ -4,4 +4,6 @@ import java.time.LocalDateTime;
 
 public interface LikeEventUseCase {
     void addLike(Long postId, Long userId, LocalDateTime createdAt);
+
+    void removeLike(Long postId, Long userId);
 }

@@ -11,4 +11,6 @@ public interface NotificationRepository {
     void deleteById(String notificationId);
 
     Optional<Notification> findByComment(Long commentId);
+
+    Optional<Notification> findLikeByPostIdAndLikedBy(Long postId, Long likedBy);
 }

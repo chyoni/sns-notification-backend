@@ -21,6 +21,8 @@ public class LikeEventConsumer {
         return event -> {
             if (event.type() == LikeEventType.ADD) {
                 likeEventUseCase.addLike(event.postId(), event.userId(), event.createdAt());
+            } else if (event.type() == LikeEventType.REMOVE) {
+                likeEventUseCase.removeLike(event.postId(), event.userId());
             }
         };
     }
