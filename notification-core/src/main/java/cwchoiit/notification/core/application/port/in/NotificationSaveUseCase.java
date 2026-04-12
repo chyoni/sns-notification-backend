@@ -4,7 +4,7 @@ import cwchoiit.notification.core.domain.notification.NotificationType;
 import java.time.LocalDateTime;
 
 public interface NotificationSaveUseCase {
-    void save(
+    void saveComment(
             Long userId,
             NotificationType type,
             LocalDateTime occurredAt,
@@ -12,4 +12,11 @@ public interface NotificationSaveUseCase {
             Long writerId,
             Long commentId,
             String comment);
+
+    void saveLike(
+            Long userId,
+            NotificationType type,
+            LocalDateTime occurredAt,
+            Long postId,
+            Long likedBy);
 }

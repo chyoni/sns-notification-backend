@@ -33,7 +33,7 @@ public class CommentEventService implements CommentEventUseCase {
 
         Comment findComment = commentClient.findCommentById(commentId).orElseThrow();
 
-        notificationSaveUseCase.save(
+        notificationSaveUseCase.saveComment(
                 findPost.userId(),
                 NotificationType.COMMENT,
                 findComment.createdAt(),
