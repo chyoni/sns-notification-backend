@@ -3,6 +3,7 @@ package cwchoiit.notification.core.application.notification;
 import cwchoiit.notification.core.application.port.in.NotificationSaveUseCase;
 import cwchoiit.notification.core.application.port.out.NotificationRepository;
 import cwchoiit.notification.core.domain.notification.CommentNotification;
+import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class NotificationSaveService implements NotificationSaveUseCase {
     private final NotificationRepository notificationRepository;
 
     @Override
-    public void save(
+    public void saveComment(
             Long userId,
             NotificationType type,
             LocalDateTime occurredAt,
@@ -29,6 +30,19 @@ public class NotificationSaveService implements NotificationSaveUseCase {
             notificationRepository.save(
                     CommentNotification.create(
                             userId, occurredAt, postId, writerId, commentId, comment));
+        }
+    }
+
+    @Override
+    public void saveLike(
+            Long userId,
+            NotificationType type,
+            LocalDateTime occurredAt,
+            Long postId,
+            Long likedBy) {
+        if (type == NotificationType.LIKE) {
+            notificationRepository.save(
+                    LikeNotification.create(userId, occurredAt, postId, likedBy));
         }
     }
 }

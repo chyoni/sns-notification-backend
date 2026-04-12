@@ -2,9 +2,11 @@ package cwchoiit.notification.core.adapter.out.persistence;
 
 import cwchoiit.notification.core.application.port.out.NotificationRepository;
 import cwchoiit.notification.core.domain.notification.CommentNotification;
+import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.Notification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.CommentNotificationMongoEntity;
+import cwchoiit.notification.core.infrastructure.mongo.persistence.LikeNotificationMongoEntity;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.NotificationMongoEntity;
 import java.util.Objects;
 import java.util.Optional;
@@ -54,8 +56,18 @@ public class NotificationMongoRepositoryAdapter implements NotificationRepositor
                     commentEntity.getWriterId(),
                     commentEntity.getCommentId(),
                     commentEntity.getComment());
+        } else if (entity.getNotificationType() == NotificationType.LIKE
+                && entity instanceof LikeNotificationMongoEntity likeEntity) {
+            return new LikeNotification(
+                    likeEntity.getNotificationId(),
+                    likeEntity.getUserId(),
+                    likeEntity.getOccurredAt(),
+                    likeEntity.getCreatedAt(),
+                    likeEntity.getExpiresAt(),
+                    likeEntity.getPostId(),
+                    likeEntity.getLikedBy());
         }
-        // TODO: LIKE, FOLLOW
+        // TODO: FOLLOW
         return null;
     }
 
@@ -85,8 +97,29 @@ public class NotificationMongoRepositoryAdapter implements NotificationRepositor
                         commentNotification.getCreatedAt(),
                         commentNotification.getExpiresAt());
             }
+        } else if (notification.getNotificationType() == NotificationType.LIKE
+                && notification instanceof LikeNotification likeNotification) {
+            if (likeNotification.getNotificationId() == null) {
+                return new LikeNotificationMongoEntity(
+                        generateId(),
+                        likeNotification.getUserId(),
+                        likeNotification.getPostId(),
+                        likeNotification.getLikedBy(),
+                        likeNotification.getOccurredAt(),
+                        likeNotification.getCreatedAt(),
+                        likeNotification.getExpiresAt());
+            } else {
+                return new LikeNotificationMongoEntity(
+                        likeNotification.getNotificationId(),
+                        likeNotification.getUserId(),
+                        likeNotification.getPostId(),
+                        likeNotification.getLikedBy(),
+                        likeNotification.getOccurredAt(),
+                        likeNotification.getCreatedAt(),
+                        likeNotification.getExpiresAt());
+            }
         }
-        // TODO: LIKE, FOLLOW
+        // TODO: FOLLOW
         return null;
     }
 
