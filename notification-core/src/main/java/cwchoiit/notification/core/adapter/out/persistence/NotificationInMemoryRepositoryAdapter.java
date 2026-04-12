@@ -2,6 +2,7 @@ package cwchoiit.notification.core.adapter.out.persistence;
 
 import cwchoiit.notification.core.application.port.out.NotificationRepository;
 import cwchoiit.notification.core.domain.notification.CommentNotification;
+import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.Notification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import java.util.Map;
@@ -33,6 +34,19 @@ public class NotificationInMemoryRepositoryAdapter implements NotificationReposi
             if (value.getNotificationType() == NotificationType.COMMENT) {
                 CommentNotification commentNotification = (CommentNotification) value;
                 if (commentNotification.getCommentId().equals(commentId)) {
+                    return Optional.of(value);
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Notification> findLikeByPostIdAndLikedBy(Long postId, Long likedBy) {
+        for (Notification value : notifications.values()) {
+            if (value.getNotificationType() == NotificationType.LIKE) {
+                LikeNotification likeNotification = (LikeNotification) value;
+                if (likeNotification.getLikedBy().equals(likedBy) && likeNotification.getPostId().equals(postId)) {
                     return Optional.of(value);
                 }
             }
