@@ -7,7 +7,7 @@ spring-boot = "3.5.7"
 testcontainers = "2.0.4"
 spring-dependency = "1.1.7"
 thumbnailator = "0.4.19"
-spring-cloud = "2023.0.0"
+spring-cloud = "2025.0.0"
 
 [libraries]
 # Core Spring Dependencies
