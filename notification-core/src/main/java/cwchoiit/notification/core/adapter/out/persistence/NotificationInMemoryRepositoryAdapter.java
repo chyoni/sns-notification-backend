@@ -46,7 +46,8 @@ public class NotificationInMemoryRepositoryAdapter implements NotificationReposi
         for (Notification value : notifications.values()) {
             if (value.getNotificationType() == NotificationType.LIKE) {
                 LikeNotification likeNotification = (LikeNotification) value;
-                if (likeNotification.getLikedBy().equals(likedBy) && likeNotification.getPostId().equals(postId)) {
+                if (likeNotification.getLikedBy().equals(likedBy)
+                        && likeNotification.getPostId().equals(postId)) {
                     return Optional.of(value);
                 }
             }
