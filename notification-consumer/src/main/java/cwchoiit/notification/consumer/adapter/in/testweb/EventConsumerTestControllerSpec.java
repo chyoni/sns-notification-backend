@@ -1,6 +1,7 @@
 package cwchoiit.notification.consumer.adapter.in.testweb;
 
 import cwchoiit.notification.consumer.adapter.in.event.comment.CommentEvent;
+import cwchoiit.notification.consumer.adapter.in.event.like.LikeEvent;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -25,6 +26,20 @@ public interface EventConsumerTestControllerSpec {
                             }))
     void comment(CommentEvent commentEvent);
 
+    @Operation(
+            requestBody =
+                    @RequestBody(
+                            content = {
+                                @Content(
+                                        mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                        examples = {
+                                            @ExampleObject(
+                                                    name = "Like Event",
+                                                    value = LIKE_EVENT_PAYLOAD)
+                                        })
+                            }))
+    void like(LikeEvent likeEvent);
+
     String COMMENT_EVENT_PAYLOAD =
             """
             {
@@ -32,6 +47,16 @@ public interface EventConsumerTestControllerSpec {
                 "postId": 1,
                 "userId": 2,
                 "commentId": 3
+            }
+            """;
+
+    String LIKE_EVENT_PAYLOAD =
+            """
+            {
+                "type": "ADD",
+                "postId": 1,
+                "userId": 2,
+                "createdAt": "2026-04-11T00:00:00"
             }
             """;
 }

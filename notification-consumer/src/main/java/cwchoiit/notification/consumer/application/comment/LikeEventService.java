@@ -43,7 +43,8 @@ public class LikeEventService implements LikeEventUseCase {
             return;
         }
 
-        Notification notification = notificationLoadUseCase.findLikeByPostIdAndLikedBy(postId, userId).orElseThrow();
+        Notification notification =
+                notificationLoadUseCase.findLikeByPostIdAndLikedBy(postId, userId).orElseThrow();
         notificationRemoveUseCase.removeNotification(notification);
     }
 }

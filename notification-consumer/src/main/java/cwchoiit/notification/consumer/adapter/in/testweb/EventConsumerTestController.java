@@ -1,6 +1,7 @@
 package cwchoiit.notification.consumer.adapter.in.testweb;
 
 import cwchoiit.notification.consumer.adapter.in.event.comment.CommentEvent;
+import cwchoiit.notification.consumer.adapter.in.event.like.LikeEvent;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,10 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class EventConsumerTestController implements EventConsumerTestControllerSpec {
 
     private final Consumer<CommentEvent> comment;
+    private final Consumer<LikeEvent> like;
 
     @Override
     @PostMapping("/api/test/comment")
     public void comment(@RequestBody CommentEvent commentEvent) {
         comment.accept(commentEvent);
+    }
+
+    @Override
+    @PostMapping("/api/test/like")
+    public void like(@RequestBody LikeEvent likeEvent) {
+        like.accept(likeEvent);
     }
 }
