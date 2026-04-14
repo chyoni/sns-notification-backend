@@ -13,4 +13,7 @@ public interface NotificationMongoRepository
 
     @Query("{'notificationType': 'LIKE', 'postId':  ?0, 'likedBy': ?1}")
     Optional<NotificationMongoEntity> findLikeByPostIdAndLikedBy(Long postId, Long likedBy);
+
+    @Query("{'notificationType': 'FOLLOW', 'userId': ?0, 'followerId': ?1}")
+    Optional<NotificationMongoEntity> findFollowByUserIdAndFollowerId(Long userId, Long followerId);
 }
