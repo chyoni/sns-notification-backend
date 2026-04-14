@@ -1,6 +1,7 @@
 package cwchoiit.notification.consumer.adapter.in.testweb;
 
 import cwchoiit.notification.consumer.adapter.in.event.comment.CommentEvent;
+import cwchoiit.notification.consumer.adapter.in.event.follow.FollowEvent;
 import cwchoiit.notification.consumer.adapter.in.event.like.LikeEvent;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ public class EventConsumerTestController implements EventConsumerTestControllerS
 
     private final Consumer<CommentEvent> comment;
     private final Consumer<LikeEvent> like;
+    private final Consumer<FollowEvent> follow;
 
     @Override
     @PostMapping("/api/test/comment")
@@ -25,5 +27,11 @@ public class EventConsumerTestController implements EventConsumerTestControllerS
     @PostMapping("/api/test/like")
     public void like(@RequestBody LikeEvent likeEvent) {
         like.accept(likeEvent);
+    }
+
+    @Override
+    @PostMapping("/api/test/follow")
+    public void follow(@RequestBody FollowEvent followEvent) {
+        follow.accept(followEvent);
     }
 }

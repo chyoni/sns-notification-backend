@@ -4,9 +4,6 @@ import cwchoiit.notification.consumer.adapter.in.event.follow.FollowEvent;
 import cwchoiit.notification.consumer.adapter.in.event.follow.FollowEventType;
 import cwchoiit.notification.consumer.application.port.in.FollowEventUseCase;
 import java.util.function.Consumer;
-
-import cwchoiit.notification.consumer.adapter.in.event.follow.FollowEventType;
-import cwchoiit.notification.consumer.application.port.in.FollowEventUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -23,9 +20,11 @@ public class FollowEventConsumer {
     public Consumer<FollowEvent> follow() {
         return event -> {
             if (event.type() == FollowEventType.ADD) {
-                followEventUseCase.addFollow(event.targetUserId(), event.userId(), event.createdAt());
+                followEventUseCase.addFollow(
+                        event.targetUserId(), event.userId(), event.createdAt());
             } else if (event.type() == FollowEventType.REMOVE) {
-                followEventUseCase.removeFollow(event.targetUserId(), event.userId(), event.createdAt());
+                followEventUseCase.removeFollow(
+                        event.targetUserId(), event.userId(), event.createdAt());
             }
         };
     }
