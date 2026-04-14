@@ -2,10 +2,12 @@ package cwchoiit.notification.core.adapter.out.persistence;
 
 import cwchoiit.notification.core.application.port.out.NotificationRepository;
 import cwchoiit.notification.core.domain.notification.CommentNotification;
+import cwchoiit.notification.core.domain.notification.FollowNotification;
 import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.Notification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.CommentNotificationMongoEntity;
+import cwchoiit.notification.core.infrastructure.mongo.persistence.FollowNotificationMongoEntity;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.LikeNotificationMongoEntity;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.NotificationMongoEntity;
 import java.util.Objects;
@@ -48,6 +50,11 @@ public class NotificationMongoRepositoryAdapter implements NotificationRepositor
         return mongoRepository.findLikeByPostIdAndLikedBy(postId, likedBy).map(this::toDomain);
     }
 
+    @Override
+    public Optional<Notification> findFollowByUserIdAndFollowerId(Long userId, Long followerId) {
+        return mongoRepository.findFollowByUserIdAndFollowerId(userId, followerId).map(this::toDomain);
+    }
+
     private Notification toDomain(NotificationMongoEntity entity) {
         if (entity.getNotificationType() == NotificationType.COMMENT
                 && entity instanceof CommentNotificationMongoEntity commentEntity) {
@@ -71,61 +78,62 @@ public class NotificationMongoRepositoryAdapter implements NotificationRepositor
                     likeEntity.getExpiresAt(),
                     likeEntity.getPostId(),
                     likeEntity.getLikedBy());
+        } else if (entity.getNotificationType() == NotificationType.FOLLOW
+                && entity instanceof FollowNotificationMongoEntity followEntity) {
+            return new FollowNotification(
+                    followEntity.getNotificationId(),
+                    followEntity.getUserId(),
+                    followEntity.getOccurredAt(),
+                    followEntity.getCreatedAt(),
+                    followEntity.getExpiresAt(),
+                    followEntity.getFollowerId());
         }
-        // TODO: FOLLOW
-        return null;
+        throw new IllegalArgumentException("Unknown entity type: " + entity.getClass());
     }
 
     private NotificationMongoEntity toEntity(Notification notification) {
         if (notification.getNotificationType() == NotificationType.COMMENT
                 && notification instanceof CommentNotification commentNotification) {
-            if (commentNotification.getNotificationId() == null) {
-                return new CommentNotificationMongoEntity(
-                        generateId(),
-                        commentNotification.getUserId(),
-                        commentNotification.getPostId(),
-                        commentNotification.getWriterId(),
-                        commentNotification.getCommentId(),
-                        commentNotification.getComment(),
-                        commentNotification.getOccurredAt(),
-                        commentNotification.getCreatedAt(),
-                        commentNotification.getExpiresAt());
-            } else {
-                return new CommentNotificationMongoEntity(
-                        commentNotification.getNotificationId(),
-                        commentNotification.getUserId(),
-                        commentNotification.getPostId(),
-                        commentNotification.getWriterId(),
-                        commentNotification.getCommentId(),
-                        commentNotification.getComment(),
-                        commentNotification.getOccurredAt(),
-                        commentNotification.getCreatedAt(),
-                        commentNotification.getExpiresAt());
-            }
+            String id = commentNotification.getNotificationId() != null
+                    ? commentNotification.getNotificationId()
+                    : generateId();
+            return new CommentNotificationMongoEntity(
+                    id,
+                    commentNotification.getUserId(),
+                    commentNotification.getPostId(),
+                    commentNotification.getWriterId(),
+                    commentNotification.getCommentId(),
+                    commentNotification.getComment(),
+                    commentNotification.getOccurredAt(),
+                    commentNotification.getCreatedAt(),
+                    commentNotification.getExpiresAt());
         } else if (notification.getNotificationType() == NotificationType.LIKE
                 && notification instanceof LikeNotification likeNotification) {
-            if (likeNotification.getNotificationId() == null) {
-                return new LikeNotificationMongoEntity(
-                        generateId(),
-                        likeNotification.getUserId(),
-                        likeNotification.getPostId(),
-                        likeNotification.getLikedBy(),
-                        likeNotification.getOccurredAt(),
-                        likeNotification.getCreatedAt(),
-                        likeNotification.getExpiresAt());
-            } else {
-                return new LikeNotificationMongoEntity(
-                        likeNotification.getNotificationId(),
-                        likeNotification.getUserId(),
-                        likeNotification.getPostId(),
-                        likeNotification.getLikedBy(),
-                        likeNotification.getOccurredAt(),
-                        likeNotification.getCreatedAt(),
-                        likeNotification.getExpiresAt());
-            }
+            String id = likeNotification.getNotificationId() != null
+                    ? likeNotification.getNotificationId()
+                    : generateId();
+            return new LikeNotificationMongoEntity(
+                    id,
+                    likeNotification.getUserId(),
+                    likeNotification.getPostId(),
+                    likeNotification.getLikedBy(),
+                    likeNotification.getOccurredAt(),
+                    likeNotification.getCreatedAt(),
+                    likeNotification.getExpiresAt());
+        } else if (notification.getNotificationType() == NotificationType.FOLLOW
+                && notification instanceof FollowNotification followNotification) {
+            String id = followNotification.getNotificationId() != null
+                    ? followNotification.getNotificationId()
+                    : generateId();
+            return new FollowNotificationMongoEntity(
+                    id,
+                    followNotification.getUserId(),
+                    followNotification.getFollowerId(),
+                    followNotification.getOccurredAt(),
+                    followNotification.getCreatedAt(),
+                    followNotification.getExpiresAt());
         }
-        // TODO: FOLLOW
-        return null;
+        throw new IllegalArgumentException("Unknown notification type: " + notification.getClass());
     }
 
     private String generateId() {
