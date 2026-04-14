@@ -74,6 +74,22 @@ class NotificationRemoveServiceTest {
         then(notificationRepository).should().deleteById("second-id");
     }
 
+    // --- removeLikeAtomically ---
+
+    @Test
+    void removeLikeAtomically_호출시_Repository의_removeLikeAtomically를_정확한_파라미터로_한_번만_호출한다() {
+        // given
+        Long postId = 10L;
+        Long likedUserId = 2L;
+
+        // when
+        sut.removeLikeAtomically(postId, likedUserId);
+
+        // then
+        then(notificationRepository).should().removeLikeAtomically(postId, likedUserId);
+        then(notificationRepository).shouldHaveNoMoreInteractions();
+    }
+
     // --- 픽스처 ---
 
     private LikeNotification 좋아요_알림(String notificationId) {

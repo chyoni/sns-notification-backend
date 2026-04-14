@@ -3,10 +3,12 @@ package cwchoiit.notification.core.adapter.out.persistence;
 import cwchoiit.notification.core.application.port.out.NotificationRepository;
 import cwchoiit.notification.core.domain.notification.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
@@ -69,6 +71,40 @@ public class NotificationInMemoryRepositoryAdapter implements NotificationReposi
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public void addLikeAtomically(
+            Long postId, Long postOwnerId, Long likedUserId, LocalDateTime occurredAt) {
+        Optional<Notification> existing = findLikeByPostId(postId);
+        if (existing.isPresent()) {
+            LikeNotification like = (LikeNotification) existing.get();
+            like.addLikedId(likedUserId, occurredAt);
+        } else {
+            String id = UUID.randomUUID().toString();
+            LikeNotification newNotification =
+                    new LikeNotification(
+                            id,
+                            postOwnerId,
+                            occurredAt,
+                            LocalDateTime.now(),
+                            occurredAt.plusDays(90),
+                            postId,
+                            new ArrayList<>(List.of(likedUserId)));
+            notifications.put(id, newNotification);
+        }
+    }
+
+    @Override
+    public void removeLikeAtomically(Long postId, Long likedUserId) {
+        Optional<Notification> existing = findLikeByPostId(postId);
+        if (existing.isPresent()) {
+            LikeNotification like = (LikeNotification) existing.get();
+            like.removeLikedId(likedUserId);
+            if (like.likedCount() == 0) {
+                notifications.remove(like.getNotificationId());
+            }
+        }
     }
 
     @Override

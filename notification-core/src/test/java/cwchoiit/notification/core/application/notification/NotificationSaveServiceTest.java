@@ -144,4 +144,23 @@ class NotificationSaveServiceTest {
         // then
         then(notificationRepository).shouldHaveNoInteractions();
     }
+
+    // --- addLikeAtomically ---
+
+    @Test
+    void addLikeAtomically_호출시_Repository의_addLikeAtomically를_정확한_파라미터로_한_번만_호출한다() {
+        // given
+        Long postId = 10L;
+        Long postOwnerId = 1L;
+        Long likedUserId = 2L;
+
+        // when
+        sut.addLikeAtomically(postId, postOwnerId, likedUserId, OCCURRED_AT);
+
+        // then
+        then(notificationRepository)
+                .should()
+                .addLikeAtomically(postId, postOwnerId, likedUserId, OCCURRED_AT);
+        then(notificationRepository).shouldHaveNoMoreInteractions();
+    }
 }

@@ -53,6 +53,12 @@ public class NotificationSaveService implements NotificationSaveUseCase {
     }
 
     @Override
+    public void addLikeAtomically(
+            Long postId, Long postOwnerId, Long likedUserId, LocalDateTime occurredAt) {
+        notificationRepository.addLikeAtomically(postId, postOwnerId, likedUserId, occurredAt);
+    }
+
+    @Override
     public void saveFollow(
             NotificationType type, Long userId, Long followerId, LocalDateTime occurredAt) {
         if (type == NotificationType.FOLLOW) {

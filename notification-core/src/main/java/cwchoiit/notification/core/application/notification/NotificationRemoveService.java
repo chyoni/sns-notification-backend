@@ -18,4 +18,9 @@ public class NotificationRemoveService implements NotificationRemoveUseCase {
     public void removeNotification(Notification notification) {
         notificationRepository.deleteById(notification.getNotificationId());
     }
+
+    @Override
+    public void removeLikeAtomically(Long postId, Long likedUserId) {
+        notificationRepository.removeLikeAtomically(postId, likedUserId);
+    }
 }
