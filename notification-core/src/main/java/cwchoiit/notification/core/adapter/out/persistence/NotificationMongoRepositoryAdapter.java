@@ -2,9 +2,11 @@ package cwchoiit.notification.core.adapter.out.persistence;
 
 import cwchoiit.notification.core.application.port.out.NotificationRepository;
 import cwchoiit.notification.core.domain.notification.CommentNotification;
+import cwchoiit.notification.core.domain.notification.FollowNotification;
 import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.Notification;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.CommentNotificationMongoEntity;
+import cwchoiit.notification.core.infrastructure.mongo.persistence.FollowNotificationMongoEntity;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.LikeNotificationMongoEntity;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.NotificationMongoEntity;
 import java.util.Objects;

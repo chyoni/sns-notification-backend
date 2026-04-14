@@ -13,4 +13,6 @@ public interface NotificationRepository {
     Optional<Notification> findByComment(Long commentId);
 
     Optional<Notification> findLikeByPostIdAndLikedBy(Long postId, Long likedBy);
+
+    Optional<Notification> findFollowByUserIdAndFollowerId(Long userId, Long followerId);
 }

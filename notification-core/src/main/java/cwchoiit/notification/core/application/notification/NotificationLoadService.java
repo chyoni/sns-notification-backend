@@ -24,4 +24,9 @@ public class NotificationLoadService implements NotificationLoadUseCase {
     public Optional<Notification> findLikeByPostIdAndLikedBy(Long postId, Long likedBy) {
         return notificationRepository.findLikeByPostIdAndLikedBy(postId, likedBy);
     }
+
+    @Override
+    public Optional<Notification> findFollowByUserIdAndFollowerId(Long userId, Long followerId) {
+        return notificationRepository.findFollowByUserIdAndFollowerId(userId, followerId);
+    }
 }
