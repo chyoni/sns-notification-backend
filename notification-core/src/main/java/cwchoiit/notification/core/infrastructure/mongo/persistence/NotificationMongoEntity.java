@@ -1,5 +1,6 @@
 package cwchoiit.notification.core.infrastructure.mongo.persistence;
 
+import cwchoiit.notification.core.domain.notification.Notification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -37,4 +38,6 @@ public abstract class NotificationMongoEntity {
         this.createdAt = createdAt;
         this.expiresAt = expiresAt;
     }
+
+    public abstract Notification toDomain();
 }

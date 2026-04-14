@@ -16,14 +16,16 @@ class LikeNotificationTest {
 
     @Test
     void create_팩토리_메서드로_생성하면_LIKE_타입이다() {
-        LikeNotification notification = LikeNotification.create(USER_ID, OCCURRED_AT, POST_ID, LIKED_BY);
+        LikeNotification notification =
+                LikeNotification.create(USER_ID, OCCURRED_AT, POST_ID, LIKED_BY);
 
         assertThat(notification.getNotificationType()).isEqualTo(NotificationType.LIKE);
     }
 
     @Test
     void create_팩토리_메서드로_생성하면_도메인_필드가_올바르게_설정된다() {
-        LikeNotification notification = LikeNotification.create(USER_ID, OCCURRED_AT, POST_ID, LIKED_BY);
+        LikeNotification notification =
+                LikeNotification.create(USER_ID, OCCURRED_AT, POST_ID, LIKED_BY);
 
         assertThat(notification.getUserId()).isEqualTo(USER_ID);
         assertThat(notification.getPostId()).isEqualTo(POST_ID);
@@ -34,14 +36,16 @@ class LikeNotificationTest {
     @Test
     void create_팩토리_메서드로_생성하면_notificationId가_null이다() {
         // DB 저장 전이므로 ID 없음
-        LikeNotification notification = LikeNotification.create(USER_ID, OCCURRED_AT, POST_ID, LIKED_BY);
+        LikeNotification notification =
+                LikeNotification.create(USER_ID, OCCURRED_AT, POST_ID, LIKED_BY);
 
         assertThat(notification.getNotificationId()).isNull();
     }
 
     @Test
     void create_팩토리_메서드로_생성하면_expiresAt이_occurredAt_기준_90일_후이다() {
-        LikeNotification notification = LikeNotification.create(USER_ID, OCCURRED_AT, POST_ID, LIKED_BY);
+        LikeNotification notification =
+                LikeNotification.create(USER_ID, OCCURRED_AT, POST_ID, LIKED_BY);
 
         assertThat(notification.getExpiresAt()).isEqualTo(OCCURRED_AT.plusDays(90));
     }
@@ -49,7 +53,8 @@ class LikeNotificationTest {
     @Test
     void create_팩토리_메서드로_생성하면_createdAt이_현재_시각으로_설정된다() {
         LocalDateTime before = LocalDateTime.now();
-        LikeNotification notification = LikeNotification.create(USER_ID, OCCURRED_AT, POST_ID, LIKED_BY);
+        LikeNotification notification =
+                LikeNotification.create(USER_ID, OCCURRED_AT, POST_ID, LIKED_BY);
         LocalDateTime after = LocalDateTime.now();
 
         assertThat(notification.getCreatedAt()).isBetween(before, after);
@@ -76,7 +81,14 @@ class LikeNotificationTest {
         LocalDateTime expiresAt = LocalDateTime.of(2026, 4, 1, 0, 0);
 
         LikeNotification notification =
-                new LikeNotification(notificationId, USER_ID, OCCURRED_AT, createdAt, expiresAt, POST_ID, LIKED_BY);
+                new LikeNotification(
+                        notificationId,
+                        USER_ID,
+                        OCCURRED_AT,
+                        createdAt,
+                        expiresAt,
+                        POST_ID,
+                        LIKED_BY);
 
         assertThat(notification.getNotificationId()).isEqualTo(notificationId);
         assertThat(notification.getUserId()).isEqualTo(USER_ID);
@@ -93,7 +105,14 @@ class LikeNotificationTest {
         LocalDateTime customExpiresAt = LocalDateTime.of(2099, 12, 31, 23, 59);
 
         LikeNotification notification =
-                new LikeNotification("noti-1", USER_ID, OCCURRED_AT, LocalDateTime.now(), customExpiresAt, POST_ID, LIKED_BY);
+                new LikeNotification(
+                        "noti-1",
+                        USER_ID,
+                        OCCURRED_AT,
+                        LocalDateTime.now(),
+                        customExpiresAt,
+                        POST_ID,
+                        LIKED_BY);
 
         assertThat(notification.getExpiresAt()).isEqualTo(customExpiresAt);
     }

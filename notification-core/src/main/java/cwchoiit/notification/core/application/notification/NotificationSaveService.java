@@ -3,6 +3,7 @@ package cwchoiit.notification.core.application.notification;
 import cwchoiit.notification.core.application.port.in.NotificationSaveUseCase;
 import cwchoiit.notification.core.application.port.out.NotificationRepository;
 import cwchoiit.notification.core.domain.notification.CommentNotification;
+import cwchoiit.notification.core.domain.notification.FollowNotification;
 import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import java.time.LocalDateTime;
@@ -43,6 +44,16 @@ public class NotificationSaveService implements NotificationSaveUseCase {
         if (type == NotificationType.LIKE) {
             notificationRepository.save(
                     LikeNotification.create(userId, occurredAt, postId, likedBy));
+        }
+    }
+
+    @Override
+    public void saveFollow(
+            NotificationType type, Long userId, Long followerId, LocalDateTime occurredAt) {
+        if (type == NotificationType.FOLLOW) {
+            notificationRepository.save(
+                    notificationRepository.save(
+                            FollowNotification.create(userId, occurredAt, followerId)));
         }
     }
 }

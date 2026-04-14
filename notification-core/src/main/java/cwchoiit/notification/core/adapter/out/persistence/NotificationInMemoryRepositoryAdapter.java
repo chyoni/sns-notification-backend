@@ -1,10 +1,7 @@
 package cwchoiit.notification.core.adapter.out.persistence;
 
 import cwchoiit.notification.core.application.port.out.NotificationRepository;
-import cwchoiit.notification.core.domain.notification.CommentNotification;
-import cwchoiit.notification.core.domain.notification.LikeNotification;
-import cwchoiit.notification.core.domain.notification.Notification;
-import cwchoiit.notification.core.domain.notification.NotificationType;
+import cwchoiit.notification.core.domain.notification.*;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,6 +45,20 @@ public class NotificationInMemoryRepositoryAdapter implements NotificationReposi
                 LikeNotification likeNotification = (LikeNotification) value;
                 if (likeNotification.getLikedBy().equals(likedBy)
                         && likeNotification.getPostId().equals(postId)) {
+                    return Optional.of(value);
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Notification> findFollowByUserIdAndFollowerId(Long userId, Long followerId) {
+        for (Notification value : notifications.values()) {
+            if (value.getNotificationType() == NotificationType.FOLLOW) {
+                FollowNotification followNotification = (FollowNotification) value;
+                if (followNotification.getUserId().equals(userId)
+                        && followNotification.getFollowerId().equals(followerId)) {
                     return Optional.of(value);
                 }
             }

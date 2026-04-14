@@ -19,4 +19,6 @@ public interface NotificationSaveUseCase {
             LocalDateTime occurredAt,
             Long postId,
             Long likedBy);
+
+    void saveFollow(NotificationType type, Long userId, Long followerId, LocalDateTime occurredAt);
 }
