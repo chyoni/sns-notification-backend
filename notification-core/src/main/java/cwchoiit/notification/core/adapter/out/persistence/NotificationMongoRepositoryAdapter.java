@@ -9,11 +9,14 @@ import cwchoiit.notification.core.infrastructure.mongo.persistence.CommentNotifi
 import cwchoiit.notification.core.infrastructure.mongo.persistence.FollowNotificationMongoEntity;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.LikeNotificationMongoEntity;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.NotificationMongoEntity;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Repository;
 
 @Slf4j
@@ -55,6 +58,21 @@ public class NotificationMongoRepositoryAdapter implements NotificationRepositor
     public Optional<Notification> findFollowByUserIdAndFollowerId(Long userId, Long followerId) {
         return mongoRepository
                 .findFollowByUserIdAndFollowerId(userId, followerId)
+                .map(NotificationMongoEntity::toDomain);
+    }
+
+    @Override
+    public Slice<Notification> findAllByUserIdOrderByOccurredAtDesc(
+            Long userId, Pageable pageable) {
+        return mongoRepository.findAllByUserIdOrderByOccurredAtDesc(userId, pageable)
+                .map(NotificationMongoEntity::toDomain);
+    }
+
+    @Override
+    public Slice<Notification> findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
+            Long userId, LocalDateTime occurredAt, Pageable pageable) {
+        return mongoRepository.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
+                        userId, occurredAt, pageable)
                 .map(NotificationMongoEntity::toDomain);
     }
 
