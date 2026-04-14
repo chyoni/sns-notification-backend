@@ -1,5 +1,6 @@
 package cwchoiit.notification.core.infrastructure.mongo.persistence;
 
+import cwchoiit.notification.core.domain.notification.FollowNotification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -21,5 +22,26 @@ public class FollowNotificationMongoEntity extends NotificationMongoEntity {
             LocalDateTime expiresAt) {
         super(notificationId, userId, NotificationType.FOLLOW, occurredAt, createdAt, expiresAt);
         this.followerId = followerId;
+    }
+
+    public static FollowNotificationMongoEntity from(FollowNotification domain, String id) {
+        return new FollowNotificationMongoEntity(
+                id,
+                domain.getUserId(),
+                domain.getFollowerId(),
+                domain.getOccurredAt(),
+                domain.getCreatedAt(),
+                domain.getExpiresAt());
+    }
+
+    @Override
+    public FollowNotification toDomain() {
+        return new FollowNotification(
+                getNotificationId(),
+                getUserId(),
+                getOccurredAt(),
+                getCreatedAt(),
+                getExpiresAt(),
+                followerId);
     }
 }

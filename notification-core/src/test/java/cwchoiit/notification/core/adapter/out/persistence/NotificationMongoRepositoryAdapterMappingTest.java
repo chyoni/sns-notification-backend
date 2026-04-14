@@ -4,13 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.mock;
 
 import cwchoiit.notification.core.domain.notification.CommentNotification;
 import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.Notification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.CommentNotificationMongoEntity;
+import cwchoiit.notification.core.infrastructure.mongo.persistence.FollowNotificationMongoEntity;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.LikeNotificationMongoEntity;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.NotificationMongoEntity;
 import java.time.LocalDateTime;
@@ -23,8 +23,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 /**
- * NotificationMongoRepositoryAdapter의 매핑 로직(toDomain/toEntity) 단위 테스트.
- * private 메서드이므로 public API를 통해 모든 분기를 검증한다.
+ * NotificationMongoRepositoryAdapter의 매핑 로직(toDomain/toEntity) 단위 테스트. private 메서드이므로 public API를
+ * 통해 모든 분기를 검증한다.
  */
 @ExtendWith(MockitoExtension.class)
 class NotificationMongoRepositoryAdapterMappingTest {
@@ -43,8 +43,7 @@ class NotificationMongoRepositoryAdapterMappingTest {
     @Test
     void COMMENT_엔티티를_조회하면_CommentNotification_도메인으로_변환된다() {
         // given
-        CommentNotificationMongoEntity entity =
-                댓글_엔티티("noti-1", 1L, 10L, 2L, 100L, "댓글 내용");
+        CommentNotificationMongoEntity entity = 댓글_엔티티("noti-1", 1L, 10L, 2L, 100L, "댓글 내용");
         given(mongoRepository.findById("noti-1")).willReturn(Optional.of(entity));
 
         // when
@@ -90,18 +89,23 @@ class NotificationMongoRepositoryAdapterMappingTest {
     }
 
     @Test
-    void 미구현_타입인_FOLLOW_엔티티_조회시_빈_Optional을_반환한다() {
-        // given - FOLLOW는 아직 구현되지 않아 toDomain()이 null을 반환
-        // Optional.map(null)은 Optional.empty()가 됨
-        NotificationMongoEntity followEntity = mock(NotificationMongoEntity.class);
-        given(followEntity.getNotificationType()).willReturn(NotificationType.FOLLOW);
+    void FOLLOW_엔티티_조회시_FollowNotification_도메인을_반환한다() {
+        // given
+        FollowNotificationMongoEntity followEntity =
+                new FollowNotificationMongoEntity(
+                        "follow-1",
+                        1L,
+                        2L,
+                        LocalDateTime.now(),
+                        LocalDateTime.now(),
+                        LocalDateTime.now().plusDays(90));
         given(mongoRepository.findById("follow-1")).willReturn(Optional.of(followEntity));
 
         // when
         Optional<Notification> result = sut.findById("follow-1");
 
         // then
-        assertThat(result).isEmpty();
+        assertThat(result).isPresent();
     }
 
     @Test
@@ -123,10 +127,14 @@ class NotificationMongoRepositoryAdapterMappingTest {
     @Test
     void notificationId가_null인_CommentNotification_저장시_새_ID를_생성하여_MongoDB에_전달한다() {
         // given - create()로 생성하면 notificationId가 null
-        CommentNotification domain = CommentNotification.create(1L, OCCURRED_AT, 10L, 2L, 100L, "댓글");
-        CommentNotificationMongoEntity savedEntity = 댓글_엔티티("generated-id", 1L, 10L, 2L, 100L, "댓글");
-        given(mongoRepository.save(any(CommentNotificationMongoEntity.class))).willReturn(savedEntity);
-        ArgumentCaptor<NotificationMongoEntity> captor = ArgumentCaptor.forClass(NotificationMongoEntity.class);
+        CommentNotification domain =
+                CommentNotification.create(1L, OCCURRED_AT, 10L, 2L, 100L, "댓글");
+        CommentNotificationMongoEntity savedEntity =
+                댓글_엔티티("generated-id", 1L, 10L, 2L, 100L, "댓글");
+        given(mongoRepository.save(any(CommentNotificationMongoEntity.class)))
+                .willReturn(savedEntity);
+        ArgumentCaptor<NotificationMongoEntity> captor =
+                ArgumentCaptor.forClass(NotificationMongoEntity.class);
 
         // when
         sut.save(domain);
@@ -141,10 +149,21 @@ class NotificationMongoRepositoryAdapterMappingTest {
     void notificationId가_있는_CommentNotification_저장시_기존_ID를_그대로_사용한다() {
         // given
         CommentNotification domain =
-                new CommentNotification("existing-id", 1L, OCCURRED_AT, CREATED_AT, EXPIRES_AT, 10L, 2L, 100L, "댓글");
+                new CommentNotification(
+                        "existing-id",
+                        1L,
+                        OCCURRED_AT,
+                        CREATED_AT,
+                        EXPIRES_AT,
+                        10L,
+                        2L,
+                        100L,
+                        "댓글");
         CommentNotificationMongoEntity savedEntity = 댓글_엔티티("existing-id", 1L, 10L, 2L, 100L, "댓글");
-        given(mongoRepository.save(any(CommentNotificationMongoEntity.class))).willReturn(savedEntity);
-        ArgumentCaptor<NotificationMongoEntity> captor = ArgumentCaptor.forClass(NotificationMongoEntity.class);
+        given(mongoRepository.save(any(CommentNotificationMongoEntity.class)))
+                .willReturn(savedEntity);
+        ArgumentCaptor<NotificationMongoEntity> captor =
+                ArgumentCaptor.forClass(NotificationMongoEntity.class);
 
         // when
         sut.save(domain);
@@ -160,7 +179,8 @@ class NotificationMongoRepositoryAdapterMappingTest {
         LikeNotification domain = LikeNotification.create(1L, OCCURRED_AT, 10L, 2L);
         LikeNotificationMongoEntity savedEntity = 좋아요_엔티티("generated-id", 1L, 10L, 2L);
         given(mongoRepository.save(any(LikeNotificationMongoEntity.class))).willReturn(savedEntity);
-        ArgumentCaptor<NotificationMongoEntity> captor = ArgumentCaptor.forClass(NotificationMongoEntity.class);
+        ArgumentCaptor<NotificationMongoEntity> captor =
+                ArgumentCaptor.forClass(NotificationMongoEntity.class);
 
         // when
         sut.save(domain);
@@ -175,10 +195,12 @@ class NotificationMongoRepositoryAdapterMappingTest {
     void notificationId가_있는_LikeNotification_저장시_기존_ID를_그대로_사용한다() {
         // given
         LikeNotification domain =
-                new LikeNotification("existing-id", 1L, OCCURRED_AT, CREATED_AT, EXPIRES_AT, 10L, 2L);
+                new LikeNotification(
+                        "existing-id", 1L, OCCURRED_AT, CREATED_AT, EXPIRES_AT, 10L, 2L);
         LikeNotificationMongoEntity savedEntity = 좋아요_엔티티("existing-id", 1L, 10L, 2L);
         given(mongoRepository.save(any(LikeNotificationMongoEntity.class))).willReturn(savedEntity);
-        ArgumentCaptor<NotificationMongoEntity> captor = ArgumentCaptor.forClass(NotificationMongoEntity.class);
+        ArgumentCaptor<NotificationMongoEntity> captor =
+                ArgumentCaptor.forClass(NotificationMongoEntity.class);
 
         // when
         sut.save(domain);
@@ -192,7 +214,8 @@ class NotificationMongoRepositoryAdapterMappingTest {
     void CommentNotification_저장_후_반환된_도메인_객체의_필드가_올바르다() {
         // given
         CommentNotification domain =
-                new CommentNotification("noti-1", 1L, OCCURRED_AT, CREATED_AT, EXPIRES_AT, 10L, 2L, 100L, "댓글");
+                new CommentNotification(
+                        "noti-1", 1L, OCCURRED_AT, CREATED_AT, EXPIRES_AT, 10L, 2L, 100L, "댓글");
         CommentNotificationMongoEntity savedEntity = 댓글_엔티티("noti-1", 1L, 10L, 2L, 100L, "댓글");
         given(mongoRepository.save(any())).willReturn(savedEntity);
 
@@ -307,14 +330,20 @@ class NotificationMongoRepositoryAdapterMappingTest {
             Long commentId,
             String comment) {
         return new CommentNotificationMongoEntity(
-                notificationId, userId, postId, writerId, commentId, comment,
-                OCCURRED_AT, CREATED_AT, EXPIRES_AT);
+                notificationId,
+                userId,
+                postId,
+                writerId,
+                commentId,
+                comment,
+                OCCURRED_AT,
+                CREATED_AT,
+                EXPIRES_AT);
     }
 
     private LikeNotificationMongoEntity 좋아요_엔티티(
             String notificationId, Long userId, Long postId, Long likedBy) {
         return new LikeNotificationMongoEntity(
-                notificationId, userId, postId, likedBy,
-                OCCURRED_AT, CREATED_AT, EXPIRES_AT);
+                notificationId, userId, postId, likedBy, OCCURRED_AT, CREATED_AT, EXPIRES_AT);
     }
 }

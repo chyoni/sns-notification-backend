@@ -19,7 +19,8 @@ class CommentNotificationTest {
     @Test
     void create_팩토리_메서드로_생성하면_COMMENT_타입이다() {
         CommentNotification notification =
-                CommentNotification.create(USER_ID, OCCURRED_AT, POST_ID, WRITER_ID, COMMENT_ID, COMMENT);
+                CommentNotification.create(
+                        USER_ID, OCCURRED_AT, POST_ID, WRITER_ID, COMMENT_ID, COMMENT);
 
         assertThat(notification.getNotificationType()).isEqualTo(NotificationType.COMMENT);
     }
@@ -27,7 +28,8 @@ class CommentNotificationTest {
     @Test
     void create_팩토리_메서드로_생성하면_도메인_필드가_올바르게_설정된다() {
         CommentNotification notification =
-                CommentNotification.create(USER_ID, OCCURRED_AT, POST_ID, WRITER_ID, COMMENT_ID, COMMENT);
+                CommentNotification.create(
+                        USER_ID, OCCURRED_AT, POST_ID, WRITER_ID, COMMENT_ID, COMMENT);
 
         assertThat(notification.getUserId()).isEqualTo(USER_ID);
         assertThat(notification.getPostId()).isEqualTo(POST_ID);
@@ -40,7 +42,8 @@ class CommentNotificationTest {
     @Test
     void create_팩토리_메서드로_생성하면_notificationId가_null이다() {
         CommentNotification notification =
-                CommentNotification.create(USER_ID, OCCURRED_AT, POST_ID, WRITER_ID, COMMENT_ID, COMMENT);
+                CommentNotification.create(
+                        USER_ID, OCCURRED_AT, POST_ID, WRITER_ID, COMMENT_ID, COMMENT);
 
         assertThat(notification.getNotificationId()).isNull();
     }
@@ -48,7 +51,8 @@ class CommentNotificationTest {
     @Test
     void create_팩토리_메서드로_생성하면_expiresAt이_occurredAt_기준_90일_후이다() {
         CommentNotification notification =
-                CommentNotification.create(USER_ID, OCCURRED_AT, POST_ID, WRITER_ID, COMMENT_ID, COMMENT);
+                CommentNotification.create(
+                        USER_ID, OCCURRED_AT, POST_ID, WRITER_ID, COMMENT_ID, COMMENT);
 
         assertThat(notification.getExpiresAt()).isEqualTo(OCCURRED_AT.plusDays(90));
     }
@@ -57,7 +61,8 @@ class CommentNotificationTest {
     void create_팩토리_메서드로_생성하면_createdAt이_현재_시각으로_설정된다() {
         LocalDateTime before = LocalDateTime.now();
         CommentNotification notification =
-                CommentNotification.create(USER_ID, OCCURRED_AT, POST_ID, WRITER_ID, COMMENT_ID, COMMENT);
+                CommentNotification.create(
+                        USER_ID, OCCURRED_AT, POST_ID, WRITER_ID, COMMENT_ID, COMMENT);
         LocalDateTime after = LocalDateTime.now();
 
         assertThat(notification.getCreatedAt()).isBetween(before, after);
@@ -66,7 +71,8 @@ class CommentNotificationTest {
     @Test
     void 빈_문자열_댓글로도_생성할_수_있다() {
         CommentNotification notification =
-                CommentNotification.create(USER_ID, OCCURRED_AT, POST_ID, WRITER_ID, COMMENT_ID, "");
+                CommentNotification.create(
+                        USER_ID, OCCURRED_AT, POST_ID, WRITER_ID, COMMENT_ID, "");
 
         assertThat(notification.getComment()).isEmpty();
     }

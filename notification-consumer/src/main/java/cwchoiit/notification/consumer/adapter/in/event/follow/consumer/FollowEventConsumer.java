@@ -4,6 +4,9 @@ import cwchoiit.notification.consumer.adapter.in.event.follow.FollowEvent;
 import cwchoiit.notification.consumer.adapter.in.event.follow.FollowEventType;
 import cwchoiit.notification.consumer.application.port.in.FollowEventUseCase;
 import java.util.function.Consumer;
+
+import cwchoiit.notification.consumer.adapter.in.event.follow.FollowEventType;
+import cwchoiit.notification.consumer.application.port.in.FollowEventUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;

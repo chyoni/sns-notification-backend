@@ -1,11 +1,7 @@
 package cwchoiit.notification.core.adapter.out.persistence;
 
 import cwchoiit.notification.core.application.port.out.NotificationRepository;
-import cwchoiit.notification.core.domain.notification.CommentNotification;
-import cwchoiit.notification.core.domain.notification.FollowNotification;
-import cwchoiit.notification.core.domain.notification.LikeNotification;
-import cwchoiit.notification.core.domain.notification.Notification;
-import cwchoiit.notification.core.domain.notification.NotificationType;
+import cwchoiit.notification.core.domain.notification.*;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;

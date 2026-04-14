@@ -52,7 +52,8 @@ public class NotificationSaveService implements NotificationSaveUseCase {
             NotificationType type, Long userId, Long followerId, LocalDateTime occurredAt) {
         if (type == NotificationType.FOLLOW) {
             notificationRepository.save(
-                    FollowNotification.create(userId, occurredAt, followerId));
+                    notificationRepository.save(
+                            FollowNotification.create(userId, occurredAt, followerId)));
         }
     }
 }

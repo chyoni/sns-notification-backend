@@ -25,7 +25,8 @@ public class FollowNotification extends Notification {
         this.followerId = followerId;
     }
 
-    public static FollowNotification create(Long userId, LocalDateTime occurredAt, Long followerId) {
+    public static FollowNotification create(
+            Long userId, LocalDateTime occurredAt, Long followerId) {
         return new FollowNotification(userId, occurredAt, followerId);
     }
 }

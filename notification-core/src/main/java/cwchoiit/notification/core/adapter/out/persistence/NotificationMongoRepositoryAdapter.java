@@ -46,14 +46,28 @@ public class NotificationMongoRepositoryAdapter implements NotificationRepositor
 
     @Override
     public Optional<Notification> findLikeByPostIdAndLikedBy(Long postId, Long likedBy) {
-        return mongoRepository.findLikeByPostIdAndLikedBy(postId, likedBy).map(NotificationMongoEntity::toDomain);
+        return mongoRepository
+                .findLikeByPostIdAndLikedBy(postId, likedBy)
+                .map(NotificationMongoEntity::toDomain);
+    }
+
+    @Override
+    public Optional<Notification> findFollowByUserIdAndFollowerId(Long userId, Long followerId) {
+        return mongoRepository
+                .findFollowByUserIdAndFollowerId(userId, followerId)
+                .map(NotificationMongoEntity::toDomain);
     }
 
     private NotificationMongoEntity toEntity(Notification notification) {
-        if (notification instanceof CommentNotification c) {
-            return CommentNotificationMongoEntity.from(c, resolveId(c.getNotificationId()));
-        } else if (notification instanceof LikeNotification l) {
-            return LikeNotificationMongoEntity.from(l, resolveId(l.getNotificationId()));
+        if (notification instanceof CommentNotification commentNotification) {
+            return CommentNotificationMongoEntity.from(
+                    commentNotification, resolveId(commentNotification.getNotificationId()));
+        } else if (notification instanceof LikeNotification likeNotification) {
+            return LikeNotificationMongoEntity.from(
+                    likeNotification, resolveId(likeNotification.getNotificationId()));
+        } else if (notification instanceof FollowNotification followNotification) {
+            return FollowNotificationMongoEntity.from(
+                    followNotification, resolveId(followNotification.getNotificationId()));
         }
         throw new IllegalArgumentException("Unknown notification type: " + notification.getClass());
     }

@@ -49,7 +49,14 @@ class NotificationSaveServiceTest {
         ArgumentCaptor<Notification> captor = ArgumentCaptor.forClass(Notification.class);
 
         // when
-        sut.saveComment(userId, NotificationType.COMMENT, OCCURRED_AT, postId, writerId, commentId, comment);
+        sut.saveComment(
+                userId,
+                NotificationType.COMMENT,
+                OCCURRED_AT,
+                postId,
+                writerId,
+                commentId,
+                comment);
 
         // then
         then(notificationRepository).should().save(captor.capture());
@@ -64,7 +71,9 @@ class NotificationSaveServiceTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = NotificationType.class, names = {"LIKE", "FOLLOW"})
+    @EnumSource(
+            value = NotificationType.class,
+            names = {"LIKE", "FOLLOW"})
     void COMMENT_타입이_아니면_saveComment_호출시_저장이_수행되지_않는다(NotificationType type) {
         // when
         sut.saveComment(1L, type, OCCURRED_AT, 10L, 2L, 100L, "댓글");
@@ -115,7 +124,9 @@ class NotificationSaveServiceTest {
     }
 
     @ParameterizedTest
-    @EnumSource(value = NotificationType.class, names = {"COMMENT", "FOLLOW"})
+    @EnumSource(
+            value = NotificationType.class,
+            names = {"COMMENT", "FOLLOW"})
     void LIKE_타입이_아니면_saveLike_호출시_저장이_수행되지_않는다(NotificationType type) {
         // when
         sut.saveLike(1L, type, OCCURRED_AT, 10L, 2L);
