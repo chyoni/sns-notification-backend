@@ -86,7 +86,7 @@ class NotificationMongoRepositoryAdapterMappingTest {
         assertThat(domain.getNotificationId()).isEqualTo("noti-2");
         assertThat(domain.getUserId()).isEqualTo(1L);
         assertThat(domain.getPostId()).isEqualTo(10L);
-        assertThat(domain.getLikedBy()).isEqualTo(2L);
+        assertThat(domain.getLikedIdsBy()).containsExactly(2L);
         assertThat(domain.getOccurredAt()).isEqualTo(OCCURRED_AT);
         assertThat(domain.getCreatedAt()).isEqualTo(CREATED_AT);
         assertThat(domain.getExpiresAt()).isEqualTo(EXPIRES_AT);
@@ -181,7 +181,7 @@ class NotificationMongoRepositoryAdapterMappingTest {
     @Test
     void notificationId가_null인_LikeNotification_저장시_새_ID를_생성하여_MongoDB에_전달한다() {
         // given
-        LikeNotification domain = LikeNotification.create(1L, OCCURRED_AT, 10L, 2L);
+        LikeNotification domain = LikeNotification.create(1L, OCCURRED_AT, 10L, List.of(2L));
         LikeNotificationMongoEntity savedEntity = 좋아요_엔티티("generated-id", 1L, 10L, 2L);
         given(mongoRepository.save(any(LikeNotificationMongoEntity.class))).willReturn(savedEntity);
         ArgumentCaptor<NotificationMongoEntity> captor =
@@ -201,7 +201,7 @@ class NotificationMongoRepositoryAdapterMappingTest {
         // given
         LikeNotification domain =
                 new LikeNotification(
-                        "existing-id", 1L, OCCURRED_AT, CREATED_AT, EXPIRES_AT, 10L, 2L);
+                        "existing-id", 1L, OCCURRED_AT, CREATED_AT, EXPIRES_AT, 10L, List.of(2L));
         LikeNotificationMongoEntity savedEntity = 좋아요_엔티티("existing-id", 1L, 10L, 2L);
         given(mongoRepository.save(any(LikeNotificationMongoEntity.class))).willReturn(savedEntity);
         ArgumentCaptor<NotificationMongoEntity> captor =
@@ -240,7 +240,8 @@ class NotificationMongoRepositoryAdapterMappingTest {
     void LikeNotification_저장_후_반환된_도메인_객체의_필드가_올바르다() {
         // given
         LikeNotification domain =
-                new LikeNotification("noti-2", 1L, OCCURRED_AT, CREATED_AT, EXPIRES_AT, 10L, 2L);
+                new LikeNotification(
+                        "noti-2", 1L, OCCURRED_AT, CREATED_AT, EXPIRES_AT, 10L, List.of(2L));
         LikeNotificationMongoEntity savedEntity = 좋아요_엔티티("noti-2", 1L, 10L, 2L);
         given(mongoRepository.save(any())).willReturn(savedEntity);
 
@@ -253,7 +254,7 @@ class NotificationMongoRepositoryAdapterMappingTest {
         assertThat(saved.getNotificationId()).isEqualTo("noti-2");
         assertThat(saved.getUserId()).isEqualTo(1L);
         assertThat(saved.getPostId()).isEqualTo(10L);
-        assertThat(saved.getLikedBy()).isEqualTo(2L);
+        assertThat(saved.getLikedIdsBy()).containsExactly(2L);
     }
 
     // ============================================================
@@ -310,7 +311,7 @@ class NotificationMongoRepositoryAdapterMappingTest {
         assertThat(result.get()).isInstanceOf(LikeNotification.class);
         LikeNotification domain = (LikeNotification) result.get();
         assertThat(domain.getPostId()).isEqualTo(10L);
-        assertThat(domain.getLikedBy()).isEqualTo(2L);
+        assertThat(domain.getLikedIdsBy()).containsExactly(2L);
     }
 
     @Test
@@ -481,6 +482,12 @@ class NotificationMongoRepositoryAdapterMappingTest {
     private LikeNotificationMongoEntity 좋아요_엔티티(
             String notificationId, Long userId, Long postId, Long likedBy) {
         return new LikeNotificationMongoEntity(
-                notificationId, userId, postId, likedBy, OCCURRED_AT, CREATED_AT, EXPIRES_AT);
+                notificationId,
+                userId,
+                postId,
+                List.of(likedBy),
+                OCCURRED_AT,
+                CREATED_AT,
+                EXPIRES_AT);
     }
 }

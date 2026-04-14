@@ -10,6 +10,7 @@ import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.Notification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -96,7 +97,7 @@ class NotificationSaveServiceTest {
     @Test
     void LIKE_타입으로_saveLike_호출시_LikeNotification이_저장된다() {
         // when
-        sut.saveLike(1L, NotificationType.LIKE, OCCURRED_AT, 10L, 2L);
+        sut.saveLike(1L, NotificationType.LIKE, OCCURRED_AT, 10L, List.of(2L));
 
         // then
         then(notificationRepository).should().save(any(LikeNotification.class));
@@ -111,14 +112,14 @@ class NotificationSaveServiceTest {
         ArgumentCaptor<Notification> captor = ArgumentCaptor.forClass(Notification.class);
 
         // when
-        sut.saveLike(userId, NotificationType.LIKE, OCCURRED_AT, postId, likedBy);
+        sut.saveLike(userId, NotificationType.LIKE, OCCURRED_AT, postId, List.of(likedBy));
 
         // then
         then(notificationRepository).should().save(captor.capture());
         LikeNotification saved = (LikeNotification) captor.getValue();
         assertThat(saved.getUserId()).isEqualTo(userId);
         assertThat(saved.getPostId()).isEqualTo(postId);
-        assertThat(saved.getLikedBy()).isEqualTo(likedBy);
+        assertThat(saved.getLikedIdsBy()).containsExactly(likedBy);
         assertThat(saved.getOccurredAt()).isEqualTo(OCCURRED_AT);
         assertThat(saved.getNotificationType()).isEqualTo(NotificationType.LIKE);
     }
@@ -129,7 +130,7 @@ class NotificationSaveServiceTest {
             names = {"COMMENT", "FOLLOW"})
     void LIKE_타입이_아니면_saveLike_호출시_저장이_수행되지_않는다(NotificationType type) {
         // when
-        sut.saveLike(1L, type, OCCURRED_AT, 10L, 2L);
+        sut.saveLike(1L, type, OCCURRED_AT, 10L, List.of(2L));
 
         // then
         then(notificationRepository).shouldHaveNoInteractions();
@@ -138,7 +139,7 @@ class NotificationSaveServiceTest {
     @Test
     void null_타입으로_saveLike_호출시_저장이_수행되지_않는다() {
         // when
-        sut.saveLike(1L, null, OCCURRED_AT, 10L, 2L);
+        sut.saveLike(1L, null, OCCURRED_AT, 10L, List.of(2L));
 
         // then
         then(notificationRepository).shouldHaveNoInteractions();

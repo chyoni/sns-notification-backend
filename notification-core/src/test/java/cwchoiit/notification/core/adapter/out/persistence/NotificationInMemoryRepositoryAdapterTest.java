@@ -6,6 +6,7 @@ import cwchoiit.notification.core.domain.notification.CommentNotification;
 import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.Notification;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -265,7 +266,7 @@ class NotificationInMemoryRepositoryAdapterTest {
         // then
         assertThat(result).isPresent();
         LikeNotification found = (LikeNotification) result.get();
-        assertThat(found.getLikedBy()).isEqualTo(2L);
+        assertThat(found.getLikedIdsBy()).contains(2L);
     }
 
     // --- 픽스처 ---
@@ -278,7 +279,7 @@ class NotificationInMemoryRepositoryAdapterTest {
                 LocalDateTime.now(),
                 OCCURRED_AT.plusDays(90),
                 postId,
-                likedBy);
+                List.of(likedBy));
     }
 
     private CommentNotification 댓글_알림(String notificationId, Long commentId) {

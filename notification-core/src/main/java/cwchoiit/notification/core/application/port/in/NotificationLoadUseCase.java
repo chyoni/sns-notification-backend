@@ -6,6 +6,8 @@ import java.util.Optional;
 public interface NotificationLoadUseCase {
     Optional<Notification> findNotificationByComment(Long commentId);
 
+    Optional<Notification> findLikeByPostId(Long postId);
+
     Optional<Notification> findLikeByPostIdAndLikedBy(Long postId, Long likedBy);
 
     Optional<Notification> findFollowByUserIdAndFollowerId(Long userId, Long followerId);

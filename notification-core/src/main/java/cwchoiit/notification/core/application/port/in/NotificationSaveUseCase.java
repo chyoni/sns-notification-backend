@@ -1,7 +1,9 @@
 package cwchoiit.notification.core.application.port.in;
 
+import cwchoiit.notification.core.domain.notification.Notification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface NotificationSaveUseCase {
     void saveComment(
@@ -18,7 +20,9 @@ public interface NotificationSaveUseCase {
             NotificationType type,
             LocalDateTime occurredAt,
             Long postId,
-            Long likedBy);
+            List<Long> likedBy);
+
+    void saveLike(Notification notification);
 
     void saveFollow(NotificationType type, Long userId, Long followerId, LocalDateTime occurredAt);
 }

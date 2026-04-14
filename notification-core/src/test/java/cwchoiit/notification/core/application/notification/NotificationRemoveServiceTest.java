@@ -7,6 +7,7 @@ import cwchoiit.notification.core.domain.notification.CommentNotification;
 import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.Notification;
 import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -83,7 +84,7 @@ class NotificationRemoveServiceTest {
                 LocalDateTime.now(),
                 LocalDateTime.now().plusDays(90),
                 10L,
-                2L);
+                List.of(2L));
     }
 
     private CommentNotification 댓글_알림(String notificationId) {
