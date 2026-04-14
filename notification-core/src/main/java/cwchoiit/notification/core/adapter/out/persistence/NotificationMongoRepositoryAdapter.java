@@ -64,14 +64,16 @@ public class NotificationMongoRepositoryAdapter implements NotificationRepositor
     @Override
     public Slice<Notification> findAllByUserIdOrderByOccurredAtDesc(
             Long userId, Pageable pageable) {
-        return mongoRepository.findAllByUserIdOrderByOccurredAtDesc(userId, pageable)
+        return mongoRepository
+                .findAllByUserIdOrderByOccurredAtDesc(userId, pageable)
                 .map(NotificationMongoEntity::toDomain);
     }
 
     @Override
     public Slice<Notification> findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
             Long userId, LocalDateTime occurredAt, Pageable pageable) {
-        return mongoRepository.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
+        return mongoRepository
+                .findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
                         userId, occurredAt, pageable)
                 .map(NotificationMongoEntity::toDomain);
     }

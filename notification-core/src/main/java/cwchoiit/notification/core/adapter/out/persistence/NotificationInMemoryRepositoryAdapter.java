@@ -73,21 +73,27 @@ public class NotificationInMemoryRepositoryAdapter implements NotificationReposi
     }
 
     @Override
-    public Slice<Notification> findAllByUserIdOrderByOccurredAtDesc(Long userId, Pageable pageable) {
-        List<Notification> result = notifications.values().stream()
-                .filter(n -> n.getUserId().equals(userId))
-                .sorted(Comparator.comparing(Notification::getOccurredAt).reversed())
-                .toList();
+    public Slice<Notification> findAllByUserIdOrderByOccurredAtDesc(
+            Long userId, Pageable pageable) {
+        List<Notification> result =
+                notifications.values().stream()
+                        .filter(n -> n.getUserId().equals(userId))
+                        .sorted(Comparator.comparing(Notification::getOccurredAt).reversed())
+                        .toList();
         return toSlice(result, pageable);
     }
 
     @Override
     public Slice<Notification> findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
             Long userId, LocalDateTime occurredAt, Pageable pageable) {
-        List<Notification> result = notifications.values().stream()
-                .filter(n -> n.getUserId().equals(userId) && n.getOccurredAt().isBefore(occurredAt))
-                .sorted(Comparator.comparing(Notification::getOccurredAt).reversed())
-                .toList();
+        List<Notification> result =
+                notifications.values().stream()
+                        .filter(
+                                n ->
+                                        n.getUserId().equals(userId)
+                                                && n.getOccurredAt().isBefore(occurredAt))
+                        .sorted(Comparator.comparing(Notification::getOccurredAt).reversed())
+                        .toList();
         return toSlice(result, pageable);
     }
 
