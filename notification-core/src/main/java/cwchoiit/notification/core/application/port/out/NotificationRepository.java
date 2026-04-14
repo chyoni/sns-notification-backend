@@ -19,6 +19,11 @@ public interface NotificationRepository {
 
     Optional<Notification> findLikeByPostIdAndLikedBy(Long postId, Long likedBy);
 
+    void addLikeAtomically(
+            Long postId, Long postOwnerId, Long likedUserId, LocalDateTime occurredAt);
+
+    void removeLikeAtomically(Long postId, Long likedUserId);
+
     Optional<Notification> findFollowByUserIdAndFollowerId(Long userId, Long followerId);
 
     Slice<Notification> findAllByUserIdOrderByOccurredAtDesc(Long userId, Pageable pageable);

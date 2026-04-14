@@ -24,5 +24,8 @@ public interface NotificationSaveUseCase {
 
     void saveLike(Notification notification);
 
+    void addLikeAtomically(
+            Long postId, Long postOwnerId, Long likedUserId, LocalDateTime occurredAt);
+
     void saveFollow(NotificationType type, Long userId, Long followerId, LocalDateTime occurredAt);
 }

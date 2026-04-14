@@ -269,6 +269,98 @@ class NotificationInMemoryRepositoryAdapterTest {
         assertThat(found.getLikedIdsBy()).contains(2L);
     }
 
+    // --- addLikeAtomically ---
+
+    @Test
+    void addLikeAtomically_문서가_없으면_새_좋아요_알림을_생성한다() {
+        // when
+        sut.addLikeAtomically(10L, 1L, 2L, OCCURRED_AT);
+
+        // then
+        Optional<Notification> result = sut.findLikeByPostId(10L);
+        assertThat(result).isPresent();
+        LikeNotification like = (LikeNotification) result.get();
+        assertThat(like.getPostId()).isEqualTo(10L);
+        assertThat(like.getUserId()).isEqualTo(1L);
+        assertThat(like.getLikedIdsBy()).containsExactly(2L);
+    }
+
+    @Test
+    void addLikeAtomically_문서가_있으면_likedIdsBy에_userId를_추가한다() {
+        // given
+        sut.addLikeAtomically(10L, 1L, 2L, OCCURRED_AT);
+
+        // when
+        sut.addLikeAtomically(10L, 1L, 3L, OCCURRED_AT);
+
+        // then
+        LikeNotification like = (LikeNotification) sut.findLikeByPostId(10L).orElseThrow();
+        assertThat(like.getLikedIdsBy()).containsExactlyInAnyOrder(2L, 3L);
+    }
+
+    @Test
+    void addLikeAtomically_이미_존재하는_userId는_중복_추가하지_않는다() {
+        // given
+        sut.addLikeAtomically(10L, 1L, 2L, OCCURRED_AT);
+
+        // when
+        sut.addLikeAtomically(10L, 1L, 2L, OCCURRED_AT);
+
+        // then
+        LikeNotification like = (LikeNotification) sut.findLikeByPostId(10L).orElseThrow();
+        assertThat(like.getLikedIdsBy()).containsExactly(2L);
+        assertThat(like.getLikedIdsBy()).hasSize(1);
+    }
+
+    @Test
+    void addLikeAtomically_occurredAt이_최신으로_갱신된다() {
+        // given
+        sut.addLikeAtomically(10L, 1L, 2L, OCCURRED_AT);
+        LocalDateTime laterTime = OCCURRED_AT.plusHours(1);
+
+        // when
+        sut.addLikeAtomically(10L, 1L, 3L, laterTime);
+
+        // then
+        LikeNotification like = (LikeNotification) sut.findLikeByPostId(10L).orElseThrow();
+        assertThat(like.getOccurredAt()).isEqualTo(laterTime);
+        assertThat(like.getExpiresAt()).isEqualTo(laterTime.plusDays(90));
+    }
+
+    // --- removeLikeAtomically ---
+
+    @Test
+    void removeLikeAtomically_likedIdsBy에서_userId를_제거한다() {
+        // given
+        sut.addLikeAtomically(10L, 1L, 2L, OCCURRED_AT);
+        sut.addLikeAtomically(10L, 1L, 3L, OCCURRED_AT);
+
+        // when
+        sut.removeLikeAtomically(10L, 2L);
+
+        // then
+        LikeNotification like = (LikeNotification) sut.findLikeByPostId(10L).orElseThrow();
+        assertThat(like.getLikedIdsBy()).containsExactly(3L);
+    }
+
+    @Test
+    void removeLikeAtomically_마지막_userId_제거시_문서가_삭제된다() {
+        // given
+        sut.addLikeAtomically(10L, 1L, 2L, OCCURRED_AT);
+
+        // when
+        sut.removeLikeAtomically(10L, 2L);
+
+        // then
+        assertThat(sut.findLikeByPostId(10L)).isEmpty();
+    }
+
+    @Test
+    void removeLikeAtomically_문서가_없으면_아무_동작도_하지_않는다() {
+        // when & then — 예외 없이 정상 실행
+        sut.removeLikeAtomically(99L, 2L);
+    }
+
     // --- 픽스처 ---
 
     private LikeNotification 좋아요_알림(String notificationId, Long postId, Long likedBy) {

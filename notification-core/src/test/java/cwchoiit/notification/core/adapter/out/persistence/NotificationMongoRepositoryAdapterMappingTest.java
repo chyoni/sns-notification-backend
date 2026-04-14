@@ -2,6 +2,8 @@ package cwchoiit.notification.core.adapter.out.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -26,6 +28,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.SliceImpl;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.UpdateDefinition;
 
 /**
  * NotificationMongoRepositoryAdapter의 매핑 로직(toDomain/toEntity) 단위 테스트. private 메서드이므로 public API를
@@ -35,6 +40,7 @@ import org.springframework.data.domain.SliceImpl;
 class NotificationMongoRepositoryAdapterMappingTest {
 
     @Mock private NotificationMongoRepository mongoRepository;
+    @Mock private MongoTemplate mongoTemplate;
     @InjectMocks private NotificationMongoRepositoryAdapter sut;
 
     private static final LocalDateTime OCCURRED_AT = LocalDateTime.of(2026, 1, 1, 12, 0);
@@ -456,6 +462,35 @@ class NotificationMongoRepositoryAdapterMappingTest {
         // then
         assertThat(result.getContent()).hasSize(1);
         assertThat(result.hasNext()).isTrue();
+    }
+
+    // ============================================================
+    // addLikeAtomically / removeLikeAtomically
+    // ============================================================
+
+    @Test
+    void addLikeAtomically_호출시_MongoTemplate_upsert가_올바른_컬렉션으로_호출된다() {
+        // when
+        sut.addLikeAtomically(10L, 1L, 2L, OCCURRED_AT);
+
+        // then
+        then(mongoTemplate)
+                .should()
+                .upsert(any(Query.class), any(UpdateDefinition.class), eq("notification"));
+        then(mongoTemplate).shouldHaveNoMoreInteractions();
+    }
+
+    @Test
+    void removeLikeAtomically_호출시_MongoTemplate_updateFirst와_remove가_순서대로_호출된다() {
+        // when
+        sut.removeLikeAtomically(10L, 2L);
+
+        // then — updateFirst($pull) 먼저, remove(size 조건) 다음
+        then(mongoTemplate)
+                .should()
+                .updateFirst(any(Query.class), any(UpdateDefinition.class), anyString());
+        then(mongoTemplate).should().remove(any(Query.class), anyString());
+        then(mongoTemplate).shouldHaveNoMoreInteractions();
     }
 
     // --- 픽스처 ---
