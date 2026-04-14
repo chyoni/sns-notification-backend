@@ -397,8 +397,9 @@ class NotificationMongoRepositoryAdapterMappingTest {
         Pageable pageable = PageRequest.of(0, 20);
         List<NotificationMongoEntity> entities =
                 List.of(댓글_엔티티("noti-1", userId, 10L, 2L, 100L, "댓글1"));
-        given(mongoRepository.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
-                        userId, pivot, pageable))
+        given(
+                        mongoRepository.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
+                                userId, pivot, pageable))
                 .willReturn(new SliceImpl<>(entities, pageable, false));
 
         // when
@@ -418,8 +419,9 @@ class NotificationMongoRepositoryAdapterMappingTest {
         Long userId = 1L;
         LocalDateTime pivot = LocalDateTime.of(2026, 1, 10, 0, 0);
         Pageable pageable = PageRequest.of(0, 20);
-        given(mongoRepository.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
-                        userId, pivot, pageable))
+        given(
+                        mongoRepository.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
+                                userId, pivot, pageable))
                 .willReturn(new SliceImpl<>(List.of(), pageable, false));
 
         // when
@@ -440,8 +442,9 @@ class NotificationMongoRepositoryAdapterMappingTest {
         Pageable pageable = PageRequest.of(0, 1);
         List<NotificationMongoEntity> entities =
                 List.of(댓글_엔티티("noti-1", userId, 10L, 2L, 100L, "댓글1"));
-        given(mongoRepository.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
-                        userId, pivot, pageable))
+        given(
+                        mongoRepository.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
+                                userId, pivot, pageable))
                 .willReturn(new SliceImpl<>(entities, pageable, true));
 
         // when
