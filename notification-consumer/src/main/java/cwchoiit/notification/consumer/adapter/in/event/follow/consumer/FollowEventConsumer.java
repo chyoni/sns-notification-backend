@@ -1,6 +1,8 @@
 package cwchoiit.notification.consumer.adapter.in.event.follow.consumer;
 
 import cwchoiit.notification.consumer.adapter.in.event.follow.FollowEvent;
+import cwchoiit.notification.consumer.adapter.in.event.follow.FollowEventType;
+import cwchoiit.notification.consumer.application.port.in.FollowEventUseCase;
 import java.util.function.Consumer;
 
 import cwchoiit.notification.consumer.adapter.in.event.follow.FollowEventType;
