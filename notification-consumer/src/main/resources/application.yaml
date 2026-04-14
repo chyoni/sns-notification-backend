@@ -11,6 +11,9 @@ spring:
       on-profile: local
   application:
     name: notification-consumer
+  data:
+    mongodb:
+      auto-index-creation: true
   cloud:
     function:
       definition: comment; like; follow; # Consume 할 Function 이름

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
@@ -13,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 @Getter
 @ToString
 @Document("notification")
+@CompoundIndex(def = "{'userId': 1, 'occurredAt': -1}", name = "idx_userId_occurredAt")
 public abstract class NotificationMongoEntity {
     @Id
     @Field(targetType = FieldType.STRING)

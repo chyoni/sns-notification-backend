@@ -14,6 +14,7 @@ import cwchoiit.notification.core.infrastructure.mongo.persistence.FollowNotific
 import cwchoiit.notification.core.infrastructure.mongo.persistence.LikeNotificationMongoEntity;
 import cwchoiit.notification.core.infrastructure.mongo.persistence.NotificationMongoEntity;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +22,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.SliceImpl;
 
 /**
  * NotificationMongoRepositoryAdapter의 매핑 로직(toDomain/toEntity) 단위 테스트. private 메서드이므로 public API를
@@ -318,6 +323,135 @@ class NotificationMongoRepositoryAdapterMappingTest {
 
         // then
         assertThat(result).isEmpty();
+    }
+
+    // ============================================================
+    // findAllByUserIdOrderByOccurredAtDesc
+    // ============================================================
+
+    @Test
+    void userId로_알림_목록_조회시_Slice_도메인으로_변환된다() {
+        // given
+        Long userId = 1L;
+        Pageable pageable = PageRequest.of(0, 20);
+        List<NotificationMongoEntity> entities =
+                List.of(
+                        댓글_엔티티("noti-1", userId, 10L, 2L, 100L, "댓글1"),
+                        좋아요_엔티티("noti-2", userId, 10L, 3L));
+        given(mongoRepository.findAllByUserIdOrderByOccurredAtDesc(userId, pageable))
+                .willReturn(new SliceImpl<>(entities, pageable, false));
+
+        // when
+        Slice<Notification> result = sut.findAllByUserIdOrderByOccurredAtDesc(userId, pageable);
+
+        // then
+        assertThat(result.getContent()).hasSize(2);
+        assertThat(result.getContent().get(0)).isInstanceOf(CommentNotification.class);
+        assertThat(result.getContent().get(1)).isInstanceOf(LikeNotification.class);
+        assertThat(result.hasNext()).isFalse();
+    }
+
+    @Test
+    void userId로_알림_목록_조회시_결과가_없으면_빈_Slice를_반환한다() {
+        // given
+        Long userId = 1L;
+        Pageable pageable = PageRequest.of(0, 20);
+        given(mongoRepository.findAllByUserIdOrderByOccurredAtDesc(userId, pageable))
+                .willReturn(new SliceImpl<>(List.of(), pageable, false));
+
+        // when
+        Slice<Notification> result = sut.findAllByUserIdOrderByOccurredAtDesc(userId, pageable);
+
+        // then
+        assertThat(result.getContent()).isEmpty();
+        assertThat(result.hasNext()).isFalse();
+    }
+
+    @Test
+    void userId로_알림_목록_조회시_다음_페이지가_있으면_hasNext가_true이다() {
+        // given
+        Long userId = 1L;
+        Pageable pageable = PageRequest.of(0, 1);
+        List<NotificationMongoEntity> entities =
+                List.of(댓글_엔티티("noti-1", userId, 10L, 2L, 100L, "댓글1"));
+        given(mongoRepository.findAllByUserIdOrderByOccurredAtDesc(userId, pageable))
+                .willReturn(new SliceImpl<>(entities, pageable, true));
+
+        // when
+        Slice<Notification> result = sut.findAllByUserIdOrderByOccurredAtDesc(userId, pageable);
+
+        // then
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.hasNext()).isTrue();
+    }
+
+    // ============================================================
+    // findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc
+    // ============================================================
+
+    @Test
+    void userId와_occurredAt_기준으로_알림_목록_조회시_Slice_도메인으로_변환된다() {
+        // given
+        Long userId = 1L;
+        LocalDateTime pivot = LocalDateTime.of(2026, 1, 10, 0, 0);
+        Pageable pageable = PageRequest.of(0, 20);
+        List<NotificationMongoEntity> entities =
+                List.of(댓글_엔티티("noti-1", userId, 10L, 2L, 100L, "댓글1"));
+        given(mongoRepository.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
+                        userId, pivot, pageable))
+                .willReturn(new SliceImpl<>(entities, pageable, false));
+
+        // when
+        Slice<Notification> result =
+                sut.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
+                        userId, pivot, pageable);
+
+        // then
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.getContent().get(0)).isInstanceOf(CommentNotification.class);
+        assertThat(result.hasNext()).isFalse();
+    }
+
+    @Test
+    void userId와_occurredAt_기준으로_알림_목록_조회시_결과가_없으면_빈_Slice를_반환한다() {
+        // given
+        Long userId = 1L;
+        LocalDateTime pivot = LocalDateTime.of(2026, 1, 10, 0, 0);
+        Pageable pageable = PageRequest.of(0, 20);
+        given(mongoRepository.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
+                        userId, pivot, pageable))
+                .willReturn(new SliceImpl<>(List.of(), pageable, false));
+
+        // when
+        Slice<Notification> result =
+                sut.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
+                        userId, pivot, pageable);
+
+        // then
+        assertThat(result.getContent()).isEmpty();
+        assertThat(result.hasNext()).isFalse();
+    }
+
+    @Test
+    void userId와_occurredAt_기준으로_알림_목록_조회시_다음_페이지가_있으면_hasNext가_true이다() {
+        // given
+        Long userId = 1L;
+        LocalDateTime pivot = LocalDateTime.of(2026, 1, 10, 0, 0);
+        Pageable pageable = PageRequest.of(0, 1);
+        List<NotificationMongoEntity> entities =
+                List.of(댓글_엔티티("noti-1", userId, 10L, 2L, 100L, "댓글1"));
+        given(mongoRepository.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
+                        userId, pivot, pageable))
+                .willReturn(new SliceImpl<>(entities, pageable, true));
+
+        // when
+        Slice<Notification> result =
+                sut.findAllByUserIdAndOccurredAtLessThanOrderByOccurredAtDesc(
+                        userId, pivot, pageable);
+
+        // then
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.hasNext()).isTrue();
     }
 
     // --- 픽스처 ---
