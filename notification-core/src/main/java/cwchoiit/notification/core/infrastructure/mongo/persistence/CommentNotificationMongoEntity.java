@@ -1,5 +1,6 @@
 package cwchoiit.notification.core.infrastructure.mongo.persistence;
 
+import cwchoiit.notification.core.domain.notification.CommentNotification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -30,5 +31,32 @@ public class CommentNotificationMongoEntity extends NotificationMongoEntity {
         this.writerId = writerId;
         this.commentId = commentId;
         this.comment = comment;
+    }
+
+    public static CommentNotificationMongoEntity from(CommentNotification domain, String id) {
+        return new CommentNotificationMongoEntity(
+                id,
+                domain.getUserId(),
+                domain.getPostId(),
+                domain.getWriterId(),
+                domain.getCommentId(),
+                domain.getComment(),
+                domain.getOccurredAt(),
+                domain.getCreatedAt(),
+                domain.getExpiresAt());
+    }
+
+    @Override
+    public CommentNotification toDomain() {
+        return new CommentNotification(
+                getNotificationId(),
+                getUserId(),
+                getOccurredAt(),
+                getCreatedAt(),
+                getExpiresAt(),
+                postId,
+                writerId,
+                commentId,
+                comment);
     }
 }
