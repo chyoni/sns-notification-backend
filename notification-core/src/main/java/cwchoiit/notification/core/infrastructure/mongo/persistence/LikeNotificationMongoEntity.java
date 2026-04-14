@@ -1,5 +1,6 @@
 package cwchoiit.notification.core.infrastructure.mongo.persistence;
 
+import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -25,5 +26,28 @@ public class LikeNotificationMongoEntity extends NotificationMongoEntity {
         super(notificationId, userId, NotificationType.LIKE, occurredAt, createdAt, expiresAt);
         this.postId = postId;
         this.likedBy = likedBy;
+    }
+
+    public static LikeNotificationMongoEntity from(LikeNotification domain, String id) {
+        return new LikeNotificationMongoEntity(
+                id,
+                domain.getUserId(),
+                domain.getPostId(),
+                domain.getLikedBy(),
+                domain.getOccurredAt(),
+                domain.getCreatedAt(),
+                domain.getExpiresAt());
+    }
+
+    @Override
+    public LikeNotification toDomain() {
+        return new LikeNotification(
+                getNotificationId(),
+                getUserId(),
+                getOccurredAt(),
+                getCreatedAt(),
+                getExpiresAt(),
+                postId,
+                likedBy);
     }
 }
