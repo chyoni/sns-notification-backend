@@ -2,11 +2,9 @@ package cwchoiit.notification.core.application.notification;
 
 import cwchoiit.notification.core.application.port.in.NotificationSaveUseCase;
 import cwchoiit.notification.core.application.port.out.NotificationRepository;
-import cwchoiit.notification.core.domain.notification.CommentNotification;
-import cwchoiit.notification.core.domain.notification.FollowNotification;
-import cwchoiit.notification.core.domain.notification.LikeNotification;
-import cwchoiit.notification.core.domain.notification.NotificationType;
+import cwchoiit.notification.core.domain.notification.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -40,10 +38,17 @@ public class NotificationSaveService implements NotificationSaveUseCase {
             NotificationType type,
             LocalDateTime occurredAt,
             Long postId,
-            Long likedBy) {
+            List<Long> likedIdsBy) {
         if (type == NotificationType.LIKE) {
             notificationRepository.save(
-                    LikeNotification.create(userId, occurredAt, postId, likedBy));
+                    LikeNotification.create(userId, occurredAt, postId, likedIdsBy));
+        }
+    }
+
+    @Override
+    public void saveLike(Notification notification) {
+        if (notification.getNotificationType() == NotificationType.LIKE) {
+            notificationRepository.save(notification);
         }
     }
 

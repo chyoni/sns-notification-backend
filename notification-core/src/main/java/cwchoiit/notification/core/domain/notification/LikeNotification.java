@@ -1,6 +1,7 @@
 package cwchoiit.notification.core.domain.notification;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -8,8 +9,8 @@ import lombok.ToString;
 @ToString
 public class LikeNotification extends Notification {
     private final Long postId;
-    /** 좋아요 누른 유저의 ID */
-    private final Long likedBy;
+    /** 좋아요 누른 유저의 IDs */
+    private final List<Long> likedIdsBy;
 
     public LikeNotification(
             String notificationId,
@@ -18,20 +19,36 @@ public class LikeNotification extends Notification {
             LocalDateTime createdAt,
             LocalDateTime expiresAt,
             Long postId,
-            Long likedBy) {
+            List<Long> likedIdsBy) {
         super(notificationId, userId, NotificationType.LIKE, occurredAt, createdAt, expiresAt);
         this.postId = postId;
-        this.likedBy = likedBy;
+        this.likedIdsBy = likedIdsBy;
     }
 
-    protected LikeNotification(Long userId, LocalDateTime occurredAt, Long postId, Long likedBy) {
+    protected LikeNotification(
+            Long userId, LocalDateTime occurredAt, Long postId, List<Long> likedIdsBy) {
         super(userId, NotificationType.LIKE, occurredAt);
         this.postId = postId;
-        this.likedBy = likedBy;
+        this.likedIdsBy = likedIdsBy;
     }
 
     public static LikeNotification create(
-            Long userId, LocalDateTime occurredAt, Long postId, Long likedBy) {
-        return new LikeNotification(userId, occurredAt, postId, likedBy);
+            Long userId, LocalDateTime occurredAt, Long postId, List<Long> likedIdsBy) {
+        return new LikeNotification(userId, occurredAt, postId, likedIdsBy);
+    }
+
+    public void addLikedId(Long likedBy, LocalDateTime occurredAt) {
+        if (!this.getLikedIdsBy().contains(likedBy)) {
+            this.getLikedIdsBy().add(likedBy);
+            this.updateOccurredAt(occurredAt);
+        }
+    }
+
+    public void removeLikedId(Long likedBy) {
+        this.getLikedIdsBy().remove(likedBy);
+    }
+
+    public int likedCount() {
+        return this.getLikedIdsBy().size();
     }
 }

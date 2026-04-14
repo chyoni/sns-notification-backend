@@ -6,9 +6,11 @@ import cwchoiit.notification.consumer.application.port.out.PostClientPort;
 import cwchoiit.notification.core.application.port.in.NotificationLoadUseCase;
 import cwchoiit.notification.core.application.port.in.NotificationRemoveUseCase;
 import cwchoiit.notification.core.application.port.in.NotificationSaveUseCase;
+import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.Notification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,8 +33,21 @@ public class LikeEventService implements LikeEventUseCase {
             return;
         }
 
-        notificationSaveUseCase.saveLike(
-                findPost.userId(), NotificationType.LIKE, createdAt, postId, userId);
+        notificationLoadUseCase
+                .findLikeByPostId(postId)
+                .ifPresentOrElse(
+                        notification -> {
+                            LikeNotification likeNotification = (LikeNotification) notification;
+                            likeNotification.addLikedId(userId, createdAt);
+                            notificationSaveUseCase.saveLike(likeNotification);
+                        },
+                        () ->
+                                notificationSaveUseCase.saveLike(
+                                        findPost.userId(),
+                                        NotificationType.LIKE,
+                                        createdAt,
+                                        postId,
+                                        List.of(userId)));
     }
 
     @Override
@@ -43,8 +58,15 @@ public class LikeEventService implements LikeEventUseCase {
             return;
         }
 
-        Notification notification =
-                notificationLoadUseCase.findLikeByPostIdAndLikedBy(postId, userId).orElseThrow();
-        notificationRemoveUseCase.removeNotification(notification);
+        Notification notification = notificationLoadUseCase.findLikeByPostId(postId).orElseThrow();
+
+        LikeNotification likeNotification = (LikeNotification) notification;
+        likeNotification.removeLikedId(userId);
+
+        if (likeNotification.likedCount() == 0) {
+            notificationRemoveUseCase.removeNotification(notification);
+        } else {
+            notificationSaveUseCase.saveLike(likeNotification);
+        }
     }
 }

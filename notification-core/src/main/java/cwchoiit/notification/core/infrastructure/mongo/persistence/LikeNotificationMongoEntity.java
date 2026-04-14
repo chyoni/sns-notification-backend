@@ -3,6 +3,7 @@ package cwchoiit.notification.core.infrastructure.mongo.persistence;
 import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.NotificationType;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.data.annotation.TypeAlias;
@@ -13,19 +14,19 @@ import org.springframework.data.annotation.TypeAlias;
 public class LikeNotificationMongoEntity extends NotificationMongoEntity {
     private final Long postId;
     /** 좋아요 누른 유저의 ID */
-    private final Long likedBy;
+    private final List<Long> likedIdsBy;
 
     public LikeNotificationMongoEntity(
             String notificationId,
             Long userId,
             Long postId,
-            Long likedBy,
+            List<Long> likedIdsBy,
             LocalDateTime occurredAt,
             LocalDateTime createdAt,
             LocalDateTime expiresAt) {
         super(notificationId, userId, NotificationType.LIKE, occurredAt, createdAt, expiresAt);
         this.postId = postId;
-        this.likedBy = likedBy;
+        this.likedIdsBy = likedIdsBy;
     }
 
     public static LikeNotificationMongoEntity from(LikeNotification domain, String id) {
@@ -33,7 +34,7 @@ public class LikeNotificationMongoEntity extends NotificationMongoEntity {
                 id,
                 domain.getUserId(),
                 domain.getPostId(),
-                domain.getLikedBy(),
+                domain.getLikedIdsBy(),
                 domain.getOccurredAt(),
                 domain.getCreatedAt(),
                 domain.getExpiresAt());
@@ -48,6 +49,6 @@ public class LikeNotificationMongoEntity extends NotificationMongoEntity {
                 getCreatedAt(),
                 getExpiresAt(),
                 postId,
-                likedBy);
+                likedIdsBy);
     }
 }

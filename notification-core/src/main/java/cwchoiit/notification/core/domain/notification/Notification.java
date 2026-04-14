@@ -22,6 +22,11 @@ public abstract class Notification {
         this.expiresAt = escalateExpiresAt(occurredAt);
     }
 
+    protected void updateOccurredAt(LocalDateTime newOccurredAt) {
+        this.occurredAt = newOccurredAt;
+        this.expiresAt = newOccurredAt.plusDays(90);
+    }
+
     private LocalDateTime escalateExpiresAt(LocalDateTime occurredAt) {
         return occurredAt.plusDays(90);
     }

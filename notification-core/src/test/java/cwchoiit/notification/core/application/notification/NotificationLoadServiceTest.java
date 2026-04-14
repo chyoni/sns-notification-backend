@@ -9,6 +9,7 @@ import cwchoiit.notification.core.domain.notification.CommentNotification;
 import cwchoiit.notification.core.domain.notification.LikeNotification;
 import cwchoiit.notification.core.domain.notification.Notification;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -137,6 +138,6 @@ class NotificationLoadServiceTest {
                 LocalDateTime.now(),
                 LocalDateTime.now().plusDays(90),
                 postId,
-                likedBy);
+                List.of(likedBy));
     }
 }

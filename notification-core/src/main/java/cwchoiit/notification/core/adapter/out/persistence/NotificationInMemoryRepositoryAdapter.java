@@ -45,11 +45,24 @@ public class NotificationInMemoryRepositoryAdapter implements NotificationReposi
     }
 
     @Override
+    public Optional<Notification> findLikeByPostId(Long postId) {
+        for (Notification value : notifications.values()) {
+            if (value.getNotificationType() == NotificationType.LIKE) {
+                LikeNotification likeNotification = (LikeNotification) value;
+                if (likeNotification.getPostId().equals(postId)) {
+                    return Optional.of(value);
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    @Override
     public Optional<Notification> findLikeByPostIdAndLikedBy(Long postId, Long likedBy) {
         for (Notification value : notifications.values()) {
             if (value.getNotificationType() == NotificationType.LIKE) {
                 LikeNotification likeNotification = (LikeNotification) value;
-                if (likeNotification.getLikedBy().equals(likedBy)
+                if (likeNotification.getLikedIdsBy().contains(likedBy)
                         && likeNotification.getPostId().equals(postId)) {
                     return Optional.of(value);
                 }

@@ -48,6 +48,11 @@ public class NotificationMongoRepositoryAdapter implements NotificationRepositor
     }
 
     @Override
+    public Optional<Notification> findLikeByPostId(Long postId) {
+        return mongoRepository.findLikeByPostId(postId).map(NotificationMongoEntity::toDomain);
+    }
+
+    @Override
     public Optional<Notification> findLikeByPostIdAndLikedBy(Long postId, Long likedBy) {
         return mongoRepository
                 .findLikeByPostIdAndLikedBy(postId, likedBy)
