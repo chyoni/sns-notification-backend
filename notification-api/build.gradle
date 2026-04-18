@@ -6,4 +6,5 @@ dependencies {
     implementation(project(":notification-commons"))
 
     implementation(libs.spring.data.commons)
+    implementation(libs.springdoc)
 }

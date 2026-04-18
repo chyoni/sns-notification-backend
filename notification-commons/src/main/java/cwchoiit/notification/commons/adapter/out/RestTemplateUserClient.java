@@ -1,12 +1,10 @@
 package cwchoiit.notification.commons.adapter.out;
 
-
 import cwchoiit.notification.commons.application.model.User;
 import cwchoiit.notification.commons.application.port.out.UserClientPort;
-import org.springframework.stereotype.Component;
-
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.stereotype.Component;
 
 /** 유저 서버가 있다고 가정하고, 해당 서버에서 userId로 특정 User를 조회하는 Client */
 @Component
