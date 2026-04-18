@@ -3,6 +3,7 @@ description = "Notification Core"
 
 dependencies {
     implementation(libs.spring.boot.data.mongodb)
+    implementation(libs.spring.boot.data.redis)
 
     testRuntimeOnly(libs.junit.platform.launcher)
 
