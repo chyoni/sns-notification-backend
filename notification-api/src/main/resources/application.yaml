@@ -6,9 +6,23 @@ notification:
     uri: ${NOTIFICATION_MONGO_URI}
 
 spring:
+  profiles:
+    group:
+      local: redis
+---
+spring:
   config:
     activate:
       on-profile: local
   data:
     mongodb:
       auto-index-creation: true
+---
+spring:
+  config:
+    activate:
+      on-profile: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
