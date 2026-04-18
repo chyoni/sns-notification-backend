@@ -1,4 +1,4 @@
-package cwchoiit.notification.consumer.application.model;
+package cwchoiit.notification.commons.application.model;
 
 import java.time.LocalDateTime;
 

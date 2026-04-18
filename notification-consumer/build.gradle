@@ -3,6 +3,8 @@ description = "Notification Consumer"
 
 dependencies {
     implementation(project(":notification-core"))
+    implementation(project(":notification-commons"))
+
     implementation(libs.spring.stream.kafka)
     implementation(libs.springdoc)
 }

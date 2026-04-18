@@ -1,11 +1,12 @@
-package cwchoiit.notification.consumer.adapter.out;
+package cwchoiit.notification.commons.adapter.out;
 
-import cwchoiit.notification.consumer.application.model.Comment;
-import cwchoiit.notification.consumer.application.port.out.CommentClientPort;
+import cwchoiit.notification.commons.application.model.Comment;
+import cwchoiit.notification.commons.application.port.out.CommentClientPort;
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
-import org.springframework.stereotype.Component;
 
 /** 댓글 서버가 있다고 가정하고, 해당 서버에서 commentId로 특정 Comment를 조회하는 Client */
 @Component
