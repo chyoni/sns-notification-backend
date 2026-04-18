@@ -3,3 +3,4 @@ rootProject.name = "notification"
 include("notification-api")
 include("notification-consumer")
 include("notification-core")
+include("notification-commons")

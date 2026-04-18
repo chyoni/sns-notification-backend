@@ -3,4 +3,7 @@ description = "Notification API"
 
 dependencies {
     implementation(project(":notification-core"))
+    implementation(project(":notification-commons"))
+
+    implementation(libs.spring.data.commons)
 }

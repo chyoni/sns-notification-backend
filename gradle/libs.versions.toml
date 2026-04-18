@@ -20,6 +20,8 @@ spring-boot-validation = { group = "org.springframework.boot", name = "spring-bo
 spring-boot-batch = { group = "org.springframework.boot", name = "spring-boot-starter-batch", version.ref = "spring-boot" }
 spring-batch-test = { group = "org.springframework.batch", name = "spring-batch-test" }
 spring-cloud-dependencies = { group = "org.springframework.cloud", name = "spring-cloud-dependencies", version.ref = "spring-cloud" }
+spring-data-commons = { group = "org.springframework.data", name = "spring-data-commons" }
+spring-context = { group = "org.springframework", name = "spring-context" }
 
 # Messaging
 spring-stream-kafka = { group = "org.springframework.cloud", name = "spring-cloud-starter-stream-kafka" }

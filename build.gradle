@@ -63,7 +63,7 @@ subprojects {
     // Global Dependency
     dependencies {
         // Spring Boot Web
-        if (project.name != "notification-core") {
+        if (project.name != "notification-core" && project.name != "notification-commons") {
             implementation(libs.spring.boot.starter.web)
         }
 

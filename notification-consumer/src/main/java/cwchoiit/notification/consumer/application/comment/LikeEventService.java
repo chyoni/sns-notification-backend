@@ -1,8 +1,8 @@
 package cwchoiit.notification.consumer.application.comment;
 
-import cwchoiit.notification.consumer.application.model.Post;
+import cwchoiit.notification.commons.application.model.Post;
+import cwchoiit.notification.commons.application.port.out.PostClientPort;
 import cwchoiit.notification.consumer.application.port.in.LikeEventUseCase;
-import cwchoiit.notification.consumer.application.port.out.PostClientPort;
 import cwchoiit.notification.core.application.port.in.NotificationRemoveUseCase;
 import cwchoiit.notification.core.application.port.in.NotificationSaveUseCase;
 import java.time.LocalDateTime;
