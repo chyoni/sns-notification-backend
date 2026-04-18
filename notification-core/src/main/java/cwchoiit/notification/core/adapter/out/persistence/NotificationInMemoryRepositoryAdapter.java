@@ -74,6 +74,13 @@ public class NotificationInMemoryRepositoryAdapter implements NotificationReposi
     }
 
     @Override
+    public Optional<Notification> findFirstByUserIdOrderByOccurredAtDesc(Long userId) {
+        return notifications.values().stream()
+                .filter(n -> n.getUserId().equals(userId))
+                .max(Comparator.comparing(Notification::getOccurredAt));
+    }
+
+    @Override
     public void addLikeAtomically(
             Long postId, Long postOwnerId, Long likedUserId, LocalDateTime occurredAt) {
         Optional<Notification> existing = findLikeByPostId(postId);

@@ -3,6 +3,7 @@ package cwchoiit.notification.core.application.notification;
 import cwchoiit.notification.core.application.port.in.NotificationLoadUseCase;
 import cwchoiit.notification.core.application.port.out.NotificationRepository;
 import cwchoiit.notification.core.domain.notification.Notification;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,5 +34,12 @@ public class NotificationLoadService implements NotificationLoadUseCase {
     @Override
     public Optional<Notification> findFollowByUserIdAndFollowerId(Long userId, Long followerId) {
         return notificationRepository.findFollowByUserIdAndFollowerId(userId, followerId);
+    }
+
+    @Override
+    public Optional<LocalDateTime> getLatestOccurredAt(Long userId) {
+        return notificationRepository
+                .findFirstByUserIdOrderByOccurredAtDesc(userId)
+                .map(Notification::getOccurredAt);
     }
 }

@@ -19,6 +19,8 @@ public interface NotificationRepository {
 
     Optional<Notification> findLikeByPostIdAndLikedBy(Long postId, Long likedBy);
 
+    Optional<Notification> findFirstByUserIdOrderByOccurredAtDesc(Long userId);
+
     void addLikeAtomically(
             Long postId, Long postOwnerId, Long likedUserId, LocalDateTime occurredAt);
 
