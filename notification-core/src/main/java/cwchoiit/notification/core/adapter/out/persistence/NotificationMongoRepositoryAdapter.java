@@ -73,6 +73,13 @@ public class NotificationMongoRepositoryAdapter implements NotificationRepositor
     }
 
     @Override
+    public Optional<Notification> findFirstByUserIdOrderByOccurredAtDesc(Long userId) {
+        return mongoRepository
+                .findFirstByUserIdOrderByOccurredAtDesc(userId)
+                .map(NotificationMongoEntity::toDomain);
+    }
+
+    @Override
     public Optional<Notification> findFollowByUserIdAndFollowerId(Long userId, Long followerId) {
         return mongoRepository
                 .findFollowByUserIdAndFollowerId(userId, followerId)

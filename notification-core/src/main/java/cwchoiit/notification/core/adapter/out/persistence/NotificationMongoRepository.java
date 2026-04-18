@@ -23,6 +23,8 @@ public interface NotificationMongoRepository
     @Query("{'notificationType': 'FOLLOW', 'userId': ?0, 'followerId': ?1}")
     Optional<NotificationMongoEntity> findFollowByUserIdAndFollowerId(Long userId, Long followerId);
 
+    Optional<NotificationMongoEntity> findFirstByUserIdOrderByOccurredAtDesc(Long userId);
+
     Slice<NotificationMongoEntity> findAllByUserIdOrderByOccurredAtDesc(
             Long userId, Pageable pageable);
 

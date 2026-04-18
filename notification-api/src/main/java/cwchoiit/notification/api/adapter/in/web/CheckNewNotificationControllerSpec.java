@@ -3,12 +3,10 @@ package cwchoiit.notification.api.adapter.in.web;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.time.LocalDateTime;
 import org.springframework.http.ResponseEntity;
 
 @Tag(name = "User Notification API")
-public interface NotificationReadControllerSpec {
-
-    @Operation(summary = "사용자가 알림 목록을 읽은 시간 기록")
-    ResponseEntity<LocalDateTime> recordLastReadAt(@Parameter(example = "1") Long userId);
+public interface CheckNewNotificationControllerSpec {
+    @Operation(summary = "사용자 신규 알림 여부 조회")
+    ResponseEntity<Boolean> checkNew(@Parameter(example = "11") Long userId);
 }
